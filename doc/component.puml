@@ -1,0 +1,19 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+'LAYOUT_WITH_LEGEND()
+
+title vimenia
+
+Component(vim, "vimania", "vim-plugin", "provides basic text matching functionality and gateway into Python app for more complex URI use cases")
+
+Container_Boundary(pythonx, "Python Application") {
+    Component(app, "Vimania Module", "Python", "provides todo functionality and complex open scenarios")
+    ContainerDb(db, "Todo DB", "Relational Database", "Stores markdown todo's from vim-managed files")
+}
+ComponentDb_Ext(twbm, "twbm Database", "Bookmark Manager DB", "Stores URIs for usage by application twbm")
+
+Rel(vim, app, "Calls", "method")
+Rel(app, db, "Uses", "SQL")
+Rel(app, twbm, "Updates", "SQL")
+@enduml

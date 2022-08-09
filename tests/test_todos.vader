@@ -1,0 +1,34 @@
+# vim: set ts=2 sw=2 tw=120 et :
+"
+" TODO: Test is working, but only visual comparision possible
+"
+"
+"----------------------------------- xxx -----------------------------------
+Before:
+  messages clear
+
+Given markdown (test-buffer text):
+  - [ ] bla bub ()
+  - [b] xxxx
+  [ ] todo ends here!
+      - [ ] todoa ends () hiere.
+  - this is a text not describing a task
+  - [x] this is a text describing a task
+  - [x] this is a text describing a task %%123%%
+  - %123% [x] this does not exist in db and should be deleted
+
+Execute(handle_todos when write):
+  call VimaniaHandleTodos("write")
+Then(load from db):
+  call VimaniaHandleTodos("read")
+Expect markdown (todos with links):
+  -%1% [ ] bla bub ()
+  - [b] xxxx
+  [ ] todo ends here!
+      -%2% [ ] todoa ends () hiere.
+  - this is a text not describing a task
+  -%3% [x] this is a text describing a task
+  -%4% [x] this is a text describing a task %%123%%
+#Then ():
+#  Messages
+#  Cfilter Opening

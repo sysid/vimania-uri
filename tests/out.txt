@@ -1,0 +1,17 @@
+      - Expected:
+          - %1% [ ] bla bub ()
+          - [b] xxxx
+          [ ] todo ends here!
+              - %2% [ ] todoa ends () hiere.
+          - this is a text not describing a task
+          - %3% [x] this is a text describing a task
+          - %4% [x] this is a text describing a task %%123%%
+          -%4% [ ] this is a text describing a task %%123%%
+      - Got:
+          -%1% [ ] bla bub ()
+          - [b] xxxx
+          [ ] todo ends here!
+              -%2% [ ] todoa ends () hiere.
+          - this is a text not describing a task
+          -%3% [ ] this is a text describing a task
+          -%4% [ ] this is a text describing a task %%123%%

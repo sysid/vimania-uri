@@ -1,0 +1,87 @@
+# vim: set ts=2 sw=2 tw=120 et :
+"----------------------------------- test_textobj_uri.vader -----------------------------------
+
+Before:
+  messages clear
+  let g:twvim_debug = 1
+  let g:os = 'Darwin'
+  "source ~/dev/vim/vim-textobj-uri/plugin/textobj/uri.vim
+
+# Successfull Tests
+Given (text-with-links ):
+  file://$HOME/dev/vim/vimania/tests/data/vimania.pdf
+Do ():
+  go
+Then ():
+  Messages
+  Cfilter Opening
+  Log printf("Len of location list: %s", len(getqflist()))
+  Assert len(getqflist()) == 1
+
+"Given (fullpath):
+"  file:///Users/Q187392/dev/vim/vimania/tests/data/vimania.pdf
+"Given (blank):
+"  vimania::https:// $HOME/dev/vim/vim-textobj-uri/test/vimania//vimania.pdf
+"Given (double slash):
+"  vimania::https://$HOME/dev/vim/vim-textobj-uri/test/vimania//vimania.pdf
+"Given (apostrophy):
+"  "vimania::.....://$HOME/dev/vim/vim-textobj-uri/test/vimania//vimania.pdf"
+
+"Given (markdown preview):
+"  vimania::/Users/Q187392/dev/vim/vimania/tests/data/test.md
+"Do (should open im mareke2):
+"  go
+"Then ():
+"  Messages
+"  Cfilter Opening
+"  Log printf("Len of location list: %s", len(getqflist()))
+"  Assert len(getqflist()) == 1
+
+Given (markdown edit):
+  vim::/Users/Q187392/dev/vim/vimania/tests/data/test.md
+Do (open edit in vim):
+  go
+Then ():
+  Messages
+  Cfilter Opening
+  Log printf("Len of location list: %s", len(getqflist()))
+  Assert len(getqflist()) == 1
+
+
+Given (markdown edit):
+  todo::- [-] bla blub vimania now 123
+Do (open edit in vim):
+  go
+Then ():
+  Messages
+  Cfilter Opening
+  Log printf("Len of location list: %s", len(getqflist()))
+  Assert len(getqflist()) == 1
+
+
+# Failing Tests
+Given (should not work: vimania://):
+  vimania://$HOME/dev/vim/vimania/tests/data/vimania.pdf
+Do (invalid URI):
+  go
+Then ():
+  Messages
+  Cfilter /No URL/
+  Log printf("Len of location list: %s", len(getqflist()))
+  Assert len(getqflist()) == 1
+
+
+"Execute (TwFindTd: assert vimwiki filetype):
+"  TwFindTd e4m %
+"  AssertEqual 'vimwiki', &filetype
+
+
+""" not working ??? search ^# at beginning of line
+Given markdown (anchor within file):
+  [xxx](# yyy)
+  # yyy
+Do (jump to):
+  go
+Then ():
+  AssertEqual 'markdown', &filetype
+  Assert line('.') == 2
