@@ -1,5 +1,4 @@
 import logging
-import tempfile
 import traceback
 from functools import wraps
 from pathlib import Path
@@ -9,10 +8,7 @@ from typing import Dict, Tuple
 from vimania import md
 from vimania.bms.handler import delete_twbm
 from vimania.exception import VimaniaException
-from vimania.todos.handle_buffer import delete_todo_, handle_it
-from vimania.todos.handler import create_todo_, load_todos_
 from vimania.vim_ import vim_helper
-from vimania.vim_.vim_helper import feedkeys
 
 """ Python VIM Interface Wrapper """
 
@@ -77,10 +73,10 @@ def warn_to_scratch_buffer(func):
 
 class VimaniaManager:
     def __init__(
-        self,
-        *,
-        extensions=None,
-        plugin_root_dir=None,
+            self,
+            *,
+            extensions=None,
+            plugin_root_dir=None,
     ):
         self.extensions = extensions
         self.plugin_root_dir = plugin_root_dir
@@ -140,89 +136,12 @@ class VimaniaManager:
 
     @staticmethod
     @err_to_scratch_buffer
-    def edit_vimania(args: str):
-        """Edits text files and jumps to first position of pattern
-        pattern is extracted via separator: '#'
-        """
-        assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
-
-        path, suffix = split_path(args)
-        _log.debug(f"{args=}, {path=}, {suffix=}")
-        vim.command(f"tabnew {path}")
-        if suffix != "":
-            vim.command(f"/{suffix}")
-
-    @staticmethod
-    @err_to_scratch_buffer
-    def create_todo(args: str, path: str):
-        _log.debug(f"{args=}, {path=}")
-        locals = VimaniaManager._get_locals()
-        assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
-        assert isinstance(path, str), f"Error: input must be string, got {type(path)}."
-        id_ = create_todo_(args, path)
-        vim.command(f"echom 'created/updated: {args} {id_=}'")
-
-    @staticmethod
-    @err_to_scratch_buffer
-    def load_todos():
-        lineno = 10
-        # vim_helper.buf[lineno] = vim_helper.buf[lineno].rstrip()
-        current = vim.current
-
-        todos = load_todos_()
-
-        temp_path = f"{tempfile.gettempdir()}/todo_tmp.md"
-        _log.debug(f"{temp_path=}")
-
-        # scratch buffer
-        vim.command(f"edit {temp_path}")
-        # vim.command("set buftype=nofile")
-
-        vim.current.buffer[:] = todos
-
-        feedkeys(r"\<Esc>")
-        feedkeys(r"\<c-w>\<down>")
-        vim.command("set ft=markdown")
-        _log.info("Done")
-
-    @staticmethod
-    @err_to_scratch_buffer
     def debug():
         current = vim.current
 
         locals = VimaniaManager._get_locals()
         # add line at end of buffer
         current.buffer[-1:0] = ["New line at end."]
-
-    @staticmethod
-    @err_to_scratch_buffer
-    def handle_todos(args: str):
-        # path = vim.eval("@%")  # relative path
-        path = vim.eval("expand('%:p')")
-        _log.debug(f"{args=}, {path=}")
-        if args == "read":  # autocmd bufread
-            new_text = handle_it(vim.current.buffer[:], path, read=True)
-        else:  # autocmd bufwrite
-            new_text = handle_it(vim.current.buffer[:], path, read=False)
-
-        # Bug: Vista buffer is not modifiable
-        is_modifiable = vim.current.buffer.options["modifiable"]
-        if is_modifiable:
-            vim.current.buffer[:] = new_text
-        else:
-            _log.warning(
-                f"Current buffer {vim.current.buffer.name}:{vim.current.buffer.number} = {is_modifiable=}"
-            )
-
-    @staticmethod
-    @err_to_scratch_buffer
-    def delete_todo(args: str, path: str):
-        _log.debug(f"{args=}, {path=}")
-        locals = VimaniaManager._get_locals()
-        assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
-        # id_ = create_todo_(args, path)
-        id_ = delete_todo_(args, path)
-        vim.command(f"echom 'deleted: {args} {id_=}'")
 
     @staticmethod
     # https://github.com/vim/vim/issues/6017: cannot create error buffer
