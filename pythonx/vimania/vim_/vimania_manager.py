@@ -5,9 +5,12 @@ from pathlib import Path
 from pprint import pprint
 from typing import Dict, Tuple
 
+import bs4
+import requests
 from vimania import md
 from vimania.bms.handler import delete_twbm
 from vimania.exception import VimaniaException
+from vimania.pattern import URL_PATTERN
 from vimania.vim_ import vim_helper
 
 """ Python VIM Interface Wrapper """
@@ -179,3 +182,21 @@ class VimaniaManager:
         if suffix != "":
             vim.command(f"/{suffix}")
 
+    @staticmethod
+    @err_to_scratch_buffer
+    def get_url_title(url: str):
+        """Edits text files and jumps to first position of pattern
+        pattern is extracted via separator: '#'
+        """
+        m = URL_PATTERN.match(url)
+        if m is None:
+            _log.warning(f"Invalid URL: {url=}")
+            vim.command(f"echom 'Invalid URL: {url=}'")
+        assert isinstance(url, str), f"Error: input must be string, got {type(url)}."
+        # _log.debug(f"{url=}")
+        try:
+            title = bs4.BeautifulSoup(requests.get(url).content, 'lxml').title.text.strip()
+            vim.command(f"let g:vimania_url_title = '{str(title)}'")
+        except requests.exceptions.MissingSchema:
+            _log.warning(f"Invalid URL: {url=}")
+            vim.command(f"echom 'Invalid URL: {url=}'")

@@ -20,3 +20,5 @@ Github: [bash-completion](https://github.com/scop/bash-completion)
 [reference link][label]
 
 [label]: https://www.google.com
+
+[Google](https://www.google.com/)

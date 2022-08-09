@@ -97,7 +97,7 @@ def open_uri(target: URI, open_in_vim_extensions: set = None, save_twbm=False) -
             _log.info(f"twbm added: {id_}")
 
     if has_scheme(target):
-        _log.info("has scheme -> open in browser")
+        _log.info(f"has scheme -> open in browser: {target=}")
         return BrowserOpen(target)
 
     if not has_extension(target, open_in_vim_extensions):

@@ -19,6 +19,13 @@ execute 'py3file ' . g:vimania#PythonScript
 "py3file /Users/Q187392/dev/vim/vimania/pythonx/vimania/entrypoint/python_wrapper.py
 "py3file /Users/Q187392/dev/vim/vimania/plugin/python_wrapper.py
 
+function! GetURLTitle(url)
+  call TwDebug(printf("Vimania args: %s", a:url))
+  python3 xMgr.get_url_title(vim.eval('a:url'))
+  "call TwDebug(printf("title: %s", g:vimania_url_title))
+endfunction
+command! -nargs=1 GetURLTitle call GetURLTitle(<f-args>)
+
 
 function! Vimania(args, save_twbm)
   call TwDebug(printf("Vimania args: %s, save_twbm: %s", a:args, a:save_twbm))

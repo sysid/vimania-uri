@@ -31,6 +31,7 @@ if not _log.handlers:  # avoid adding multiple handler via re-sourcing
 _log.setLevel(LOG_LEVEL)
 
 # GOTCHA: activates other venvs as well
+# this is not necessary any more with proper pythonx installation
 if 'VIRTUAL_ENV' in os.environ:
     _log.debug(f"Running in VENV: {os.environ['VIRTUAL_ENV']}")
     project_base_dir = os.environ['VIRTUAL_ENV']
@@ -53,7 +54,7 @@ else:
     extensions = None
 
 xMgr = VimaniaManager(
-    plugin_root_dir = plugin_root_dir,
+    plugin_root_dir=plugin_root_dir,
     extensions=extensions,
 )
 
