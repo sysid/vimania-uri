@@ -6,29 +6,14 @@ Before:
 Given (test-buffer text):
   yyy://$HOME/dev/vim/vim-textobj-uri/test/vimania//vimania.pdf
 
-Execute(Should open marked2 viewer):
-  Vimania $HOME/dev/vim/vimania-todos/tests/data/test.md 0
-  "Vimania /Users/Q187392/dev/vim/vimania-todos/tests/data/test.md
-Then ():
-  Messages
-  Cfilter Opening
-  Log printf("Len of location list: %s", len(getqflist()))
-  Assert len(getqflist()) == 1
-
-Execute(one todo should be created in vader DB):
-  VimaniaTodo - [ ] this i a todo without funnuy chars
-Then ():
-  Messages
-  Cfilter created
-  Log printf("Len of location list: %s", len(getqflist()))
-  Assert len(getqflist()) == 1
-
-Execute(markdown edit with jump to heading1):
-  VimaniaEdit /Users/Q187392/dev/vim/vimania-todos/tests/data/test.md# Working Examples
-  "VimaniaEdit /Users/Q187392/dev/vim/vimania-todos/tests/data/test.md## Config
-Then ():
-  Log printf("Current Line: %s", getline('.'))
-  Assert "# Working Examples" == getline('.')
+#Execute(Should open marked2 viewer):
+#  Vimania $HOME/dev/vim/vimania-todos/tests/data/test.md 0
+#  "Vimania /Users/Q187392/dev/vim/vimania-todos/tests/data/test.md
+#Then ():
+#  Messages
+#  Cfilter Opening
+#  Log printf("Len of location list: %s", len(getqflist()))
+#  Assert len(getqflist()) == 1
 
 Execute(add twbm: make sure www.google.com does not exist int twbm prod):
   Vimania http://www.google.com 1
@@ -38,7 +23,8 @@ Then ():
   Log printf("Len of location list: %s", len(getqflist()))
   Assert len(getqflist()) == 1
 
-Given markdown (should delete twbm):
+# TODO: check DB for deletion
+Given markdown (should delete non existing entry in twbm):
   wiht a [url](vm::http://www.vimania.tw) some more text
 Do (delete line):
   dd
@@ -46,7 +32,6 @@ Then ():
   Log printf("Current Line: %s", getline('.'))
   Assert 1 == line('$')
   Assert "" == getline('.')
-
 Execute(add twbm):
   VimaniaDeleteTwbm wiht a [url](vm::http://www.vimania.tw) some more text
 Then ():
@@ -76,3 +61,10 @@ Then (https://sysid.github.io/ opens in Browser Tab):
   Cfilter browser
   Log printf("Len of location list: %s", len(getqflist()))
   Assert len(getqflist()) >= 1
+
+Execute(markdown edit with jump to heading1):
+  VimaniaEdit /Users/Q187392/dev/vim/vimania-uri/tests/data/test.md# Working Examples
+  "VimaniaEdit /Users/Q187392/dev/vim/vimania-todos/tests/data/test.md## Config
+Then ():
+  Log printf("Current Line: %s", getline('.'))
+  Assert "# Working Examples" == getline('.')

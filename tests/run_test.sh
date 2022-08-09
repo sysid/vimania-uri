@@ -44,9 +44,8 @@ filetype off
 set rtp+=~/.vim/plugged/vader.vim
 set rtp+=~/.vim/plugged/vim-misc
 set rtp+=~/.vim/plugged/scriptease
-set rtp+=~/.vim/plugged/vim-textobj-user
 set rtp+=~/dev/vim/tw-vim
-set rtp+=~/dev/vim/vimania-todos
+set rtp+=~/dev/vim/vimania-uri
 filetype plugin indent on
 syntax enable
 

@@ -18,7 +18,7 @@ if int(vim.eval('g:twvim_debug')) == 1:
 else:
     LOG_LEVEL = logging.INFO
 
-_log = logging.getLogger("vimania-plugin")
+_log = logging.getLogger("vimania-uri")
 
 if not _log.handlers:  # avoid adding multiple handler via re-sourcing
     handler = logging.StreamHandler(sys.stdout)

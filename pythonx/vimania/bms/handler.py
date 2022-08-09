@@ -6,7 +6,7 @@ from vimania.environment import config
 from vimania.exception import VimaniaException
 from vimania.pattern import URL_PATTERN
 
-_log = logging.getLogger("vimania-plugin.bms")
+_log = logging.getLogger("vimania-uri.bms")
 
 
 def add_twbm(url: str) -> int:

@@ -12,7 +12,7 @@ from vimania.vim_ import vim_helper
 
 """ Python VIM Interface Wrapper """
 
-_log = logging.getLogger("vimania-plugin.vimania_manager")
+_log = logging.getLogger("vimania-uri.vimania_manager")
 ROOT_DIR = Path(__file__).parent.absolute()
 
 try:
@@ -164,3 +164,18 @@ class VimaniaManager:
     def throw_error(args: str, path: str):
         _log.debug(f"{args=}, {path=}")
         raise Exception(f"Exception Test")
+
+    @staticmethod
+    @err_to_scratch_buffer
+    def edit_vimania(args: str):
+        """Edits text files and jumps to first position of pattern
+        pattern is extracted via separator: '#'
+        """
+        assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
+
+        path, suffix = split_path(args)
+        _log.debug(f"{args=}, {path=}, {suffix=}")
+        vim.command(f"tabnew {path}")
+        if suffix != "":
+            vim.command(f"/{suffix}")
+

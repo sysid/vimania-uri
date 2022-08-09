@@ -23,7 +23,7 @@ except ImportError:
 
 URI = NewType("URI", str)
 
-_log = logging.getLogger("vimania-plugin.md.mdnav")
+_log = logging.getLogger("vimania-uri.md.mdnav")
 
 
 @dataclass

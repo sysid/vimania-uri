@@ -1,6 +1,8 @@
 if exists('g:loaded_vimania_uri')
     finish
 endif
+if g:twvim_debug | echom "-D- Sourcing " expand('<sfile>:p') | endif
+let s:script_dir = fnamemodify(resolve(expand('<sfile>', ':p')), ':h')
 
 function! s:HandleMd(save_twbm)
   python3 xMgr.call_handle_md2(vim.eval('a:save_twbm'))

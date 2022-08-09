@@ -9,7 +9,7 @@ if !has("python3")
 endif
 
 " only load it once
-if exists('g:vimania_loaded')
+if exists('g:vimania_uri_wrapper')
   finish
 endif
 
@@ -18,12 +18,6 @@ call TwDebug(printf("Vimania PythonScript: %s", g:vimania#PythonScript))
 execute 'py3file ' . g:vimania#PythonScript
 "py3file /Users/Q187392/dev/vim/vimania/pythonx/vimania/entrypoint/python_wrapper.py
 "py3file /Users/Q187392/dev/vim/vimania/plugin/python_wrapper.py
-
-
-""""""""""""""": TODO
-"redraw
-
-
 
 
 function! Vimania(args, save_twbm)
@@ -40,20 +34,6 @@ endfunction
 command! -nargs=1 VimaniaEdit call VimaniaEdit(<f-args>)
 "nnoremap Q :VimaniaEdit /Users/Q187392/dev/vim/vimania/tests/data/test.md# Working Examples<CR>
 
-function! VimaniaTodo(args, path)
-  call TwDebug(printf("Vimania args: %s, path: %s", a:args, a:path))
-  python3 xMgr.create_todo(vim.eval('a:args'), vim.eval('a:path'))
-endfunction
-command! -nargs=1 VimaniaTodo call VimaniaTodo(<f-args>, expand('%:p'))
-"noremap Q :VimaniaTodo - [ ] todo vimania<CR>
-
-function! VimaniaLoadTodos()
-  "call TwDebug(printf("Vimania args: %s, path: %s", a:args, a:path))
-  python3 xMgr.load_todos()
-endfunction
-command! -nargs=0 VimaniaLoadTodos call VimaniaLoadTodos()
-"noremap Q :VimaniaLoadTodos<CR>
-
 function! VimaniaDebug()
   "call TwDebug(printf("Vimania args: %s, path: %s", a:args, a:path))
   python3 xMgr.debug()
@@ -68,19 +48,6 @@ endfunction
 command! -nargs=0 VimaniaThrowError call VimaniaThrowError()
 "noremap Q :VimaniaDebug<CR>
 
-function! VimaniaHandleTodos(args)
-  "call TwDebug(printf("Vimania args: %s, path: %s", a:args, a:path))
-  python3 xMgr.handle_todos(vim.eval('a:args'))
-endfunction
-command! -nargs=1 VimaniaHandleTodos call VimaniaHandleTodos(<f-args)
-
-function! VimaniaDeleteTodo(args, path)
-  call TwDebug(printf("Vimania args: %s, path: %s", a:args, a:path))
-  python3 xMgr.delete_todo(vim.eval('a:args'), vim.eval('a:path'))
-endfunction
-command! -nargs=1 VimaniaDeleteTodo call VimaniaDeleteTodo(<f-args>, expand('%:p'))
-"noremap Q :VimaniaDeleteTodo - [ ] todo vimania<CR>
-
 function! VimaniaDeleteTwbm(args)
   call TwDebug(printf("Vimania args: %s", a:args))
   python3 xMgr.delete_twbm(vim.eval('a:args'))
@@ -88,4 +55,4 @@ endfunction
 command! -nargs=1 VimaniaDeleteTwbm call VimaniaDeleteTwbm(<f-args>)
 "noremap Q :VimaniaDeleteTodo - [ ] todo vimania<CR>
 
-let g:vimania_loaded = 1
+let g:vimania_uri_wrapper = 1

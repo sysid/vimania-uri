@@ -9,7 +9,7 @@ from vimania.bms.handler import add_twbm
 from vimania.environment import config
 from vimania.exception import VimaniaException
 
-_log = logging.getLogger("vimania-plugin.md")
+_log = logging.getLogger("vimania-uri.md")
 
 if sys.platform.startswith("win32"):
     OS_OPEN = "explorer.exe"

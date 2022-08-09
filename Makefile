@@ -47,7 +47,7 @@ test:  ## run tests
 test-vim:  test-vim-uri  ## run tests-vim
 
 .PHONY: test-vim-uri
-test-vim-vimania:  ## run tests-vim-vimania
+test-vim-uri:  ## run tests-vim-vimania
 	@echo "- > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > "
 	pushd tests; ./run_test.sh test_vimania_uri.vader; popd
 	@echo "- < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < "
