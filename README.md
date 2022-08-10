@@ -1,8 +1,6 @@
 # Vimania: URI navigation for VIM markdown
 
 [![PyPI Version][pypi-image]][pypi-url]
-[![Build Status][build-image]][build-url]
-[![Code Coverage][coverage-image]][coverage-url]
 
 > handle URI's like double-clicking, but with VIM shortcut
 
