@@ -16,7 +16,7 @@ prep-db() {
 
 prep-twbm() {
   echo "-M- Looking for test google entry in twbm to delete if necessary."
-  id=$(TWBM_DB_URL=sqlite://///Users/Q187392/vimwiki/buku/bm.db twbm search --np '"www.google.com"')
+  id=$(TWBM_DB_URL=sqlite://///Users/Q187392/vimwiki/buku/bm.db twbm search -t vimania --np '"www.google.com"')
   if [ ! -z "$id" ]; then
     Cyan "-M- Deleting test google entry in twbm"
     TWBM_DB_URL=sqlite://///Users/Q187392/vimwiki/buku/bm.db twbm delete "$id"
