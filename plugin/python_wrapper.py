@@ -3,7 +3,7 @@ import sys
 import os
 import logging
 from pprint import pprint
-from vimania_uri.vim_.vimania_manager import VimaniaManager
+from vimania_uri.vim_.vimania_manager import VimaniaUriManager
 
 try:
     # import vim  # relevant for debugging, but gives error when run with main
@@ -53,7 +53,7 @@ if int(vim.eval("exists('g:vimania#Extensions')")):
 else:
     extensions = None
 
-xMgr = VimaniaManager(
+xUriMgr = VimaniaUriManager(
     plugin_root_dir=plugin_root_dir,
     extensions=extensions,
 )

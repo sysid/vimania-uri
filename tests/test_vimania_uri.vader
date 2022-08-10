@@ -15,7 +15,8 @@ Given (test-buffer text):
 #  Log printf("Len of location list: %s", len(getqflist()))
 #  Assert len(getqflist()) == 1
 
-Execute(add twbm: make sure www.google.com does not exist int twbm prod):
+# TODO: make test robust: dlete entry after test
+Execute(add twbm: prereq: make sure www.google.com does not exist int twbm prod):
   Vimania http://www.google.com 1
 Then ():
   Messages

@@ -149,7 +149,7 @@ Vimenia needs to know, where your twbm database is located if integration is wan
 VIM needs to find vimania dependencies in `pythonx`.
 However, try to avoid bringing up PyCharm because it tries to index the entire dependency tree.
 
-## VimaniaManager (VIM Interface)
+## VimaniaUriManager (VIM Interface)
 - cannot be tested within PyCharm, needs to be called from VIM.
 
 ## Other

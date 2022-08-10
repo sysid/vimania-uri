@@ -74,7 +74,7 @@ def warn_to_scratch_buffer(func):
     return wrapper
 
 
-class VimaniaManager:
+class VimaniaUriManager:
     def __init__(
             self,
             *,
@@ -142,7 +142,7 @@ class VimaniaManager:
     def debug():
         current = vim.current
 
-        locals = VimaniaManager._get_locals()
+        locals = VimaniaUriManager._get_locals()
         # add line at end of buffer
         current.buffer[-1:0] = ["New line at end."]
 
