@@ -196,6 +196,8 @@ class VimaniaUriManager:
         # _log.debug(f"{url=}")
         try:
             title = bs4.BeautifulSoup(requests.get(url).content, 'lxml').title.text.strip()
+            # https://stackoverflow.com/a/27324622
+            title = title.replace("'", "''")
             vim.command(f"let g:vimania_url_title = '{str(title)}'")
         except requests.exceptions.MissingSchema:
             _log.warning(f"Invalid URL: {url=}")
