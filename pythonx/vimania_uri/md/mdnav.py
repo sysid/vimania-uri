@@ -13,6 +13,7 @@ from typing import Callable, NewType, Optional, Tuple
 
 from vimania_uri.bms.handler import add_twbm
 from vimania_uri.environment import config
+from vimania_uri.exception import VimaniaException
 from vimania_uri.pattern import URL_PATTERN
 
 try:
@@ -35,6 +36,8 @@ class ParsedPath(object):
 
     @property
     def fullpath(self) -> str:
+        if self.path is None or self.path == "":
+            return ""
         if self.scheme is not None:
             return self.path
         return str(Path(os.path.expandvars(self.path)).expanduser().absolute())
@@ -73,7 +76,9 @@ def parse_uri(uri: URI) -> ParsedPath:
     )
 
 
-def open_uri(target: URI, open_in_vim_extensions: set = None, save_twbm=False) -> Callable:
+def open_uri(
+    target: URI, open_in_vim_extensions: set = None, save_twbm=False
+) -> Callable:
     """
     :returns: a callable that encapsulates the action to perform
     """
@@ -105,10 +110,10 @@ def open_uri(target: URI, open_in_vim_extensions: set = None, save_twbm=False) -
         return OSOpen(target)
 
     if target.startswith("|filename|"):
-        target = target[len("|filename|"):]
+        target = target[len("|filename|") :]
 
     if target.startswith("{filename}"):
-        target = target[len("{filename}"):]
+        target = target[len("{filename}") :]
 
     return VimOpen(target)
 
@@ -150,13 +155,17 @@ class BrowserOpen(Action):
 class OSOpen(Action):
     def __call__(self):
         p = parse_uri(self.target)
+        if not Path(p.fullpath).exists():
+            _log.error(f"{p.fullpath=} does not exists.")
+            raise FileNotFoundError(f"{p.fullpath=} does not exists")
+        _log.debug(f"Opening {p.fullpath=}")
 
         if sys.platform.startswith("linux"):
             call(["xdg-open", p.fullpath])
         elif sys.platform.startswith("darwin"):
             call(["open", p.fullpath])
         else:
-            os.startfile(p.fullpath)
+            os.startfile(p.fullpath)  # doubleclick equivalent
 
 
 class VimOpen(Action):
@@ -165,9 +174,14 @@ class VimOpen(Action):
         import vim
 
         path = parse_uri(self.target)
+        if not Path(path.fullpath).exists():
+            _log.error(f"{path.fullpath=} does not exists.")
+            raise FileNotFoundError(f"{path.fullpath=} does not exists")
+        _log.debug(f"Opening {path.fullpath=}")
 
         # TODO: make space handling more robust?
-        vim.command("e {}".format(path.fullpath.replace(" ", "\\ ")))
+        p_sanitized = path.fullpath.replace(" ", "\\ ")
+        vim.command(f"tabnew {p_sanitized}")
         if path.line is not None:
             try:
                 line = int(path.line)
@@ -226,10 +240,8 @@ def call(args):
     """If available use vims shell mechanism to work around display issues"""
     try:
         import vim
-
     except ImportError:
         subprocess.call(args)
-
     else:
         args = ["shellescape(" + json.dumps(arg) + ")" for arg in args]
         vim.command('execute "! " . ' + ' . " " . '.join(args))

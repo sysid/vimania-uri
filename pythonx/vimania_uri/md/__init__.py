@@ -1,2 +1,1 @@
-from .handler import handle
-from .mdnav import open_uri, parse_line, URI
+from .mdnav import URI, open_uri, parse_line

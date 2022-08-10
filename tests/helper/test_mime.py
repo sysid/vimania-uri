@@ -6,9 +6,15 @@ from vimania_uri.helper.mime import get_mime_type
 @pytest.mark.parametrize(
     ("uri", "result"),
     (
-        ("/Users/Q187392/dev/vim/vimania-todos/tests/data/vimania.pdf", "application/pdf"),
+        (
+            "/Users/Q187392/dev/vim/vimania-todos/tests/data/vimania.pdf",
+            "application/pdf",
+        ),
         ("/Users/Q187392/dev/vim/vimania-todos/tests/data/x.html", "text/html"),
-        ("/Users/Q187392/dev/vim/vimania-todos/tests/data/tsl-handshake.png", "image/png"),
+        (
+            "/Users/Q187392/dev/vim/vimania-todos/tests/data/tsl-handshake.png",
+            "image/png",
+        ),
         ("/Users/Q187392/dev/vim/vimania-todos/tests/data/test.md", "text/plain"),
         ("https://www.google.com", "application/x-msdownload"),
         ("mailto:xxx@bla.com", "application/x-msdownload"),

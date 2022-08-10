@@ -1,6 +1,9 @@
 import os
+from pathlib import Path
 
 import pytest
+
+from vimania_uri.environment import ROOT_DIR
 from vimania_uri.md import mdnav
 from vimania_uri.md.mdnav import URI
 
@@ -47,11 +50,13 @@ parse_link_cases = [
         ["some other stuff, not &%$ https://^www.google.com   .. and more"],
         "https://www.google.com",
     ),
+    # With Variables
+    (["[md-doc]($HO^ME/vimwiki/help.md)"], "$HOME/vimwiki/help.md"),
 ]
 
 
 @pytest.mark.parametrize("lines, expected", parse_link_cases)
-def test_parse_link(lines, expected):
+def test_parse_line(lines, expected):
     cursor, mod_lines = _find_cursor(lines)
     actual = mdnav.parse_line(cursor, mod_lines)
     assert actual == expected
@@ -118,30 +123,92 @@ def test_jump_to_anchor(target, buffer, expected):
 
 
 @pytest.mark.parametrize(
-    "path, expected_path, expected_line, expected_anchor, expected_scheme",
+    "path, expected_path, expected_line, expected_anchor, expected_scheme, expected_fullpath",
     [
-        (None, "", None, None, None),
-        ("foo.md", "./foo.md", None, None, None),
-        ("foo:bar.md", "foo:bar.md", None, None, "foo"),
-        ("foo.md:30", "./foo.md", "30", None, None),
-        ("foo.md#hello-world", "./foo.md", None, "hello-world", None),
-        ("foo.md#happy:)", "./foo.md", None, "happy:)", None),
-        ("/home/xxx/foo.md#hello-world", "/home/xxx/foo.md", None, "hello-world", None),
-        ("~/foo.md#hello-world", "~/foo.md", None, "hello-world", None),
+        (None, "", None, None, None, ""),
+        (
+            "foo.md",
+            "./foo.md",
+            None,
+            None,
+            None,
+            str(ROOT_DIR.parent.parent / "foo.md"),
+        ),
+        ("foo:bar.md", "foo:bar.md", None, None, "foo", "foo:bar.md"),
+        (
+            "foo.md:30",
+            "./foo.md",
+            "30",
+            None,
+            None,
+            str(ROOT_DIR.parent.parent / "foo.md"),
+        ),
+        (
+            "foo.md#hello-world",
+            "./foo.md",
+            None,
+            "hello-world",
+            None,
+            str(ROOT_DIR.parent.parent / "foo.md"),
+        ),
+        (
+            "foo.md#happy:)",
+            "./foo.md",
+            None,
+            "happy:)",
+            None,
+            str(ROOT_DIR.parent.parent / "foo.md"),
+        ),
+        (
+            "/home/xxx/foo.md#hello-world",
+            "/home/xxx/foo.md",
+            None,
+            "hello-world",
+            None,
+            "/home/xxx/foo.md",
+        ),
+        (
+            "~/foo.md#hello-world",
+            "~/foo.md",
+            None,
+            "hello-world",
+            None,
+            str(Path.home() / "foo.md"),
+        ),
         (
             "https://www.google.com/bla/blub",
             "https://www.google.com/bla/blub",
             None,
             None,
             "https",
+            "https://www.google.com/bla/blub",
         ),
-        ("xxx://aything", "xxx://aything", None, None, "xxx"),
-        ("./xxx://yyy", "xxx:/yyy", None, None, None),
-        ("./xxx/yyy", "xxx/yyy", None, None, None),
+        ("xxx://aything", "xxx://aything", None, None, "xxx", "xxx://aything"),
+        (
+            "./xxx://yyy",
+            "xxx:/yyy",
+            None,
+            None,
+            None,
+            str(ROOT_DIR.parent.parent / "xxx:/yyy"),
+        ),
+        (
+            "./xxx/yyy",
+            "xxx/yyy",
+            None,
+            None,
+            None,
+            str(ROOT_DIR.parent.parent / "xxx/yyy"),
+        ),
     ],
 )
-def test_parse_path(
-    path, expected_path, expected_line, expected_anchor, expected_scheme
+def test_parse_uri(
+    path,
+    expected_path,
+    expected_line,
+    expected_anchor,
+    expected_scheme,
+    expected_fullpath,
 ):
     path = mdnav.parse_uri(path)
 
@@ -149,6 +216,7 @@ def test_parse_path(
     assert path.line == expected_line
     assert path.anchor == expected_anchor
     assert path.scheme == expected_scheme
+    assert path.fullpath == expected_fullpath
 
 
 def test_full_path(mocker):

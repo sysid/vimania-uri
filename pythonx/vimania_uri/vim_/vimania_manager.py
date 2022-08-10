@@ -76,10 +76,10 @@ def warn_to_scratch_buffer(func):
 
 class VimaniaUriManager:
     def __init__(
-            self,
-            *,
-            extensions=None,
-            plugin_root_dir=None,
+        self,
+        *,
+        extensions=None,
+        plugin_root_dir=None,
     ):
         self.extensions = extensions
         self.plugin_root_dir = plugin_root_dir
@@ -107,33 +107,22 @@ class VimaniaUriManager:
     @err_to_scratch_buffer
     @warn_to_scratch_buffer
     def call_handle_md2(self, save_twbm: str):
+        return_message = ""
         _log.debug(f"{save_twbm=}")
 
         row, col = vim.current.window.cursor
         cursor = (row - 1, col)
         lines = vim.current.buffer
 
-        current_file = vim.eval("expand('%:p')"),
-        target = md.parse_line(
-            cursor, lines
-        )
+        current_file = (vim.eval("expand('%:p')"),)
+        target = md.parse_line(cursor, lines)
         _log.info(f"open {target=} from {current_file=}")
         action = md.open_uri(
             target,
             open_in_vim_extensions=self.extensions,
-            save_twbm=False if int(save_twbm) == 0 else True
+            save_twbm=False if int(save_twbm) == 0 else True,
         )
         action()
-
-    @staticmethod
-    @err_to_scratch_buffer
-    @warn_to_scratch_buffer
-    def call_handle_md(args: str, save_twbm: str):
-        _log.debug(f"{args=}, {save_twbm=}")
-        assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
-
-        # https://vim.fandom.com/wiki/User_input_from_a_script
-        return_message = md.handle(args, False if int(save_twbm) == 0 else True)
         if return_message != "":
             vim.command(f"echom '{return_message}'")
 
@@ -195,7 +184,9 @@ class VimaniaUriManager:
         assert isinstance(url, str), f"Error: input must be string, got {type(url)}."
         # _log.debug(f"{url=}")
         try:
-            title = bs4.BeautifulSoup(requests.get(url).content, 'lxml').title.text.strip()
+            title = bs4.BeautifulSoup(
+                requests.get(url).content, "lxml"
+            ).title.text.strip()
             # https://stackoverflow.com/a/27324622
             title = title.replace("'", "''")
             vim.command(f"let g:vimania_url_title = '{str(title)}'")

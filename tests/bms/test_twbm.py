@@ -1,21 +1,18 @@
-import re
-
 import pytest
 from vimania_uri.md import open_uri
-from vimania_uri.md.handler import handle, get_fqp
 from vimania_uri.md.mdnav import URI
 
 
-class TestSaveBm:
+class TestSaveTwbm:
     @pytest.mark.parametrize(
         ("uri",),
         (
-                # ("/Users/Q187392/dev/vim/vimania/tests/data/vimania.pdf",),
-                # ("$HOME/dev/vim/vimania/tests/data/vimania.pdf",),
-                # ("/Users/Q187392/dev/vim/vimania/tests/data///vimania.pdf",),
-                # ("https://www.google.com",),
-                # ("./tests/data/tsl-handshake.png",),
-                ("./tests/data/test.md",),
+            # ("/Users/Q187392/dev/vim/vimania/tests/data/vimania.pdf",),
+            # ("$HOME/dev/vim/vimania/tests/data/vimania.pdf",),
+            # ("/Users/Q187392/dev/vim/vimania/tests/data///vimania.pdf",),
+            # ("https://www.google.com",),
+            # ("./tests/data/tsl-handshake.png",),
+            ("./tests/data/test.md",),
         ),
     )
     def test_do_vimania_without_twbm(self, mocker, uri):
@@ -33,5 +30,3 @@ class TestSaveBm:
         mocked = mocker.patch("vimania_uri.md.mdnav.add_twbm", return_value=9999)
         open_uri(URI(uri), save_twbm=True)
         mocked.assert_called_once()
-
-

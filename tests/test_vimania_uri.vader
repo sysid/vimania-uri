@@ -16,8 +16,9 @@ Given (test-buffer text):
 #  Assert len(getqflist()) == 1
 
 Given markdown:
-Execute(add twbm: prereq: make sure www.google.com does not exist int twbm prod):
-  Vimania http://www.google.com 1
+  https://www.google.com
+Do(add twbm: prereq: make sure www.google.com does not exist int twbm prod):
+  goo
 Then ():
   Messages
   Cfilter add_twbm
