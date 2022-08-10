@@ -1,6 +1,6 @@
 import pytest
 
-from vimania.vim_.vimania_manager import split_path
+from vimania_uri.vim_.vimania_manager import split_path
 
 
 @pytest.mark.parametrize(

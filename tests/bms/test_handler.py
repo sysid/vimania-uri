@@ -1,9 +1,9 @@
 import re
 
 import pytest
-from vimania.md import open_uri
-from vimania.md.handler import handle, get_fqp
-from vimania.md.mdnav import URI
+from vimania_uri.md import open_uri
+from vimania_uri.md.handler import handle, get_fqp
+from vimania_uri.md.mdnav import URI
 
 
 class TestSaveBm:
@@ -19,8 +19,8 @@ class TestSaveBm:
         ),
     )
     def test_do_vimania_without_twbm(self, mocker, uri):
-        mocker.patch("vimania.environment.config.twbm_db_url", new=None)
-        mocked = mocker.patch("vimania.md.mdnav.add_twbm", return_value=9999)
+        mocker.patch("vimania_uri.environment.config.twbm_db_url", new=None)
+        mocked = mocker.patch("vimania_uri.md.mdnav.add_twbm", return_value=9999)
         open_uri(URI(uri))
         mocked.assert_not_called()
 
@@ -29,8 +29,8 @@ class TestSaveBm:
         (("./tests/data/test.md",),),
     )
     def test_do_vimania_with_twbm(self, mocker, uri):
-        mocker.patch("vimania.environment.config.twbm_db_url", new="some_uri")
-        mocked = mocker.patch("vimania.md.mdnav.add_twbm", return_value=9999)
+        mocker.patch("vimania_uri.environment.config.twbm_db_url", new="some_uri")
+        mocked = mocker.patch("vimania_uri.md.mdnav.add_twbm", return_value=9999)
         open_uri(URI(uri), save_twbm=True)
         mocked.assert_called_once()
 

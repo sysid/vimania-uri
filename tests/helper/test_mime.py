@@ -1,6 +1,6 @@
 import pytest
 
-from vimania.helper.mime import get_mime_type
+from vimania_uri.helper.mime import get_mime_type
 
 
 @pytest.mark.parametrize(

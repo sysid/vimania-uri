@@ -1,11 +1,11 @@
 pythonx/*
 !pythonx/README.md
-!pythonx/vimania
+!pythonx/vimania_uri
 !pythonx/setup.py
 !pythonx/setup.cfg
 tests/data/vimania_todos_test.db
 tests/data/vader.db
-pythonx/vimania/db/vimania.db
+pythonx/vimania_uri/db/vimania.db
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python

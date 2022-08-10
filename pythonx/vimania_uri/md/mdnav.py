@@ -11,9 +11,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, NewType, Optional, Tuple
 
-from vimania.bms.handler import add_twbm
-from vimania.environment import config
-from vimania.pattern import URL_PATTERN
+from vimania_uri.bms.handler import add_twbm
+from vimania_uri.environment import config
+from vimania_uri.pattern import URL_PATTERN
 
 try:
     from urllib.parse import urlparse

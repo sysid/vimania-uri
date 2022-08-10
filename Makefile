@@ -12,7 +12,7 @@ PIP		= venv/bin/pip
 
 app_root = $(PROJ_DIR)/pythonx
 app_root ?= .
-pkg_src =  $(app_root)/vimania
+pkg_src =  $(app_root)/vimania_uri
 tests_src = $(app_root)/tests
 
 define PRINT_HELP_PYSCRIPT

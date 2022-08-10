@@ -5,9 +5,9 @@ import sys
 from pathlib import Path
 from typing import Tuple
 
-from vimania.bms.handler import add_twbm
-from vimania.environment import config
-from vimania.exception import VimaniaException
+from vimania_uri.bms.handler import add_twbm
+from vimania_uri.environment import config
+from vimania_uri.exception import VimaniaException
 
 _log = logging.getLogger("vimania-uri.md")
 

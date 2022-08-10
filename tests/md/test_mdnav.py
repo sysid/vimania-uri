@@ -1,8 +1,8 @@
 import os
 
 import pytest
-from vimania.md import mdnav
-from vimania.md.mdnav import URI
+from vimania_uri.md import mdnav
+from vimania_uri.md.mdnav import URI
 
 # NOTE: the cursor is indicated with ^, the cursor will be placed on the
 # following character

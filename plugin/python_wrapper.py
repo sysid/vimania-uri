@@ -3,7 +3,7 @@ import sys
 import os
 import logging
 from pprint import pprint
-from vimania.vim_.vimania_manager import VimaniaManager
+from vimania_uri.vim_.vimania_manager import VimaniaManager
 
 try:
     # import vim  # relevant for debugging, but gives error when run with main

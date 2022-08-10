@@ -7,11 +7,11 @@ from typing import Dict, Tuple
 
 import bs4
 import requests
-from vimania import md
-from vimania.bms.handler import delete_twbm
-from vimania.exception import VimaniaException
-from vimania.pattern import URL_PATTERN
-from vimania.vim_ import vim_helper
+from vimania_uri import md
+from vimania_uri.bms.handler import delete_twbm
+from vimania_uri.exception import VimaniaException
+from vimania_uri.pattern import URL_PATTERN
+from vimania_uri.vim_ import vim_helper
 
 """ Python VIM Interface Wrapper """
 
