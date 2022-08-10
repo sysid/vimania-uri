@@ -140,6 +140,7 @@ class VimaniaUriManager:
     # @err_to_scratch_buffer
     # @warn_to_scratch_buffer
     def delete_twbm(args: str):
+        """removes bookmark from twbm via 'dd' mapping"""
         _log.debug(f"{args=}")
         assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
         try:
