@@ -32,4 +32,18 @@ augroup Vimania-Uri
     \ | endif
 augroup END
 
+function PasteMDLink()
+    let url = getreg("+")
+    "let title = GetURLTitle(url)
+    echo(url)
+    call GetURLTitle(url)
+    "let mdLink = printf("[%s](%s)", title, url)
+    let mdLink = printf("[%s](%s)", g:vimania_url_title, url)
+    execute "normal! a" . mdLink . "\<Esc>"
+endfunction
+
+" Make a keybinding (mnemonic: "mark down paste")
+nmap <Leader>vl :call PasteMDLink()<cr>
+
+
 let g:loaded_vimania_uri = 1
