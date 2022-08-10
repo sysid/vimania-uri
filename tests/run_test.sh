@@ -6,7 +6,7 @@ source ~/dev/binx/profile/sane_fn.sh
 
 prep-db() {
   echo "-M- Creating vader DB: $(pwd)"
-  twpushd "$PROJ_DIR/pythonx/vimania/db"
+  twpushd "$PROJ_DIR/pythonx/vimania_uri/db"
   [[ -f todos.db  ]] && rm -v todos.db
   alembic upgrade head
   readlink -f todos.db
@@ -36,8 +36,9 @@ fi
 ################################################################################
 # main
 ################################################################################
-prep-db
-prep-twbm
+# no DB required
+#prep-db
+#prep-twbm
 
 TW_VIMANIA_DB_URL=sqlite:///data/vader.db vim -Nu <(cat << EOF
 filetype off
