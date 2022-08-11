@@ -189,7 +189,7 @@ class VimaniaUriManager:
         # _log.debug(f"{url=}")
         try:
             title = bs4.BeautifulSoup(
-                requests.get(url).content, "lxml"
+                requests.get(url).content, features="lxml"
             ).title.text.strip()
             # https://stackoverflow.com/a/27324622
             title = title.replace("'", "''")

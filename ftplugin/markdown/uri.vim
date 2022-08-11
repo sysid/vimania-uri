@@ -32,7 +32,17 @@ augroup Vimania-Uri
     \ | endif
 augroup END
 
-function PasteMDLink()
+
+if !hasmapto('<Plug>PasteMDLink;')
+    " paste link
+    "nmap <Leader>vl :call s:PasteMDLink()<cr>
+    nmap <unique> <Leader>vl  <Plug>UriPasteMDLink;
+endif
+
+noremap <unique> <script> <Plug>UriPasteMDLink;  <SID>PasteMDLink
+noremap <SID>PasteMDLink  :call <SID>PasteMDLink()<CR>
+
+function s:PasteMDLink()
     let url = getreg("+")
     "let title = GetURLTitle(url)
     echo(url)
@@ -41,9 +51,6 @@ function PasteMDLink()
     let mdLink = printf("[%s](%s)", g:vimania_url_title, url)
     execute "normal! a" . mdLink . "\<Esc>"
 endfunction
-
-" Make a keybinding (mnemonic: "mark down paste")
-nmap <Leader>vl :call PasteMDLink()<cr>
 
 
 let g:loaded_vimania_uri = 1
