@@ -77,7 +77,7 @@ def parse_uri(uri: URI) -> ParsedPath:
 
 
 def open_uri(
-    target: URI, open_in_vim_extensions: set = None, save_twbm=False
+        target: URI, open_in_vim_extensions: set = None, save_twbm=False, twbm_integrated=False
 ) -> Callable:
     """
     :returns: a callable that encapsulates the action to perform
@@ -95,14 +95,19 @@ def open_uri(
     if target.startswith("#"):
         return JumpToAnchor(target)
 
-    if save_twbm and config.is_installed_twbm:
+    # TODO: better error handling
+    if twbm_integrated and save_twbm:
+        if not config.is_installed_twbm:
+            _log.error(f"Environment variable TWBM_DB_URL not set. Required for twbm integration")
+            # return lambda: None
+            raise VimaniaException(f"Environment variable TWBM_DB_URL not set. Required for twbm integration")
         id_ = add_twbm(str(target))
         if id_ != -1:
             return_message = f"new added twbm url: {id_=}"
             _log.info(f"twbm added: {id_}")
 
     if has_scheme(target):
-        _log.info(f"has scheme -> open in browser: {target=}")
+        _log.debug(f"has scheme -> open in browser: {target=}")
         return BrowserOpen(target)
 
     if not has_extension(target, open_in_vim_extensions):
@@ -110,10 +115,10 @@ def open_uri(
         return OSOpen(target)
 
     if target.startswith("|filename|"):
-        target = target[len("|filename|") :]
+        target = target[len("|filename|"):]
 
     if target.startswith("{filename}"):
-        target = target[len("{filename}") :]
+        target = target[len("{filename}"):]
 
     return VimOpen(target)
 
@@ -252,7 +257,7 @@ def parse_line(cursor, lines) -> URI | None:
     row, column = cursor
     line = lines[row]
 
-    _log.info("handle line %s (%s, %s)", line, row, column)
+    _log.debug("handle line %s (%s, %s)", line, row, column)
 
     # TODO: this only matches last URl in line with several URLs
     m = URL_PATTERN.match(line)
@@ -280,14 +285,14 @@ def parse_line(cursor, lines) -> URI | None:
         _log.info("cursor outside link")
         return None
 
-    _log.info("found match: %s", m.groups())
+    _log.debug("found match: %s", m.groups())
     assert (m.group("direct") is None) != (m.group("indirect") is None)
 
     if m.group("direct") is not None:
-        _log.info("found direct link: %s", m.group("direct"))
+        _log.debug("found direct link: %s", m.group("direct"))
         return m.group("direct")
 
-    _log.info("follow indirect link %s", m.group("indirect"))
+    _log.debug("follow indirect link %s", m.group("indirect"))
     indirect_ref = m.group("indirect")
     if not indirect_ref:
         indirect_ref = m.group("text")

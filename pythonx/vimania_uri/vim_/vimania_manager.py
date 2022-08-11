@@ -79,9 +79,11 @@ class VimaniaUriManager:
         self,
         *,
         extensions=None,
+        twbm_integrated=False,
         plugin_root_dir=None,
     ):
         self.extensions = extensions
+        self.twbm_integrated = twbm_integrated
         self.plugin_root_dir = plugin_root_dir
         _log.debug(f"{extensions=}, {plugin_root_dir=}")
 
@@ -116,11 +118,12 @@ class VimaniaUriManager:
 
         current_file = (vim.eval("expand('%:p')"),)
         target = md.parse_line(cursor, lines)
-        _log.info(f"open {target=} from {current_file=}")
+        _log.debug(f"open {target=} from {current_file=}")
         action = md.open_uri(
             target,
             open_in_vim_extensions=self.extensions,
             save_twbm=False if int(save_twbm) == 0 else True,
+            twbm_integrated=self.twbm_integrated,
         )
         action()
         if return_message != "":

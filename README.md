@@ -94,18 +94,32 @@ The following links can be used (the possible cursor positions are indicated by 
 
 The behavior can be configured via the following options:
 
-- `g:vimania#Extensions`:
+- `g:vimania_uri_extensions`:
     a comma separated list of file extensions.
     Only file s with the given extensions will be opened in vim, all other
     files will be opened via the configured application (using `open` on OSX
     and `xdg-open` on linux).
     This option may be useful to link to non-text documents, say PDF files.
+- `g:vimania_uri_twbm_integration`:
+    Boolean flag to configure twbm integration
 
 
 ## Bookmark Manager Integratiaon
 - If [twbm · PyPI](https://pypi.org/project/twbm/) is installed `vimania-uri` pushes URI's to the bookmark database with `goo`.
 - Pushed bookmarks have default tag `vimania` in the bookmark-manager db.
-- Bookmarks are removed from bookmark-manager database when removed from markdown file with `dd`
+- Bookmarks are also removed from bookmark-manager database when removed from markdown file with `dd`
+
+### Configuration
+```vim
+"Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}
+  let g:vimania_uri_extensions=['.md','.txt','.rst','.py']
+  let g:vimania_uri_twbm_integration=1
+```
+For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
+
+`export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"`
+
+
 
 
 ## Installation
@@ -118,12 +132,6 @@ The behavior can be configured via the following options:
 Using [vim-plug](https://github.com/junegunn/vim-plug):
 
 `Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}`
-
-
-### Configuration
-For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
-
-`export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"`
 
 
 ### URIs insertion convenience method:

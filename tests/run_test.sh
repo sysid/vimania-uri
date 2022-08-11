@@ -49,6 +49,11 @@ set rtp+=~/dev/vim/vimania-uri
 filetype plugin indent on
 syntax enable
 
+" TWBM INTEGRATION:
+let g:vimania_uri_twbm_integration=1
+" URI extensions
+let g:vimania_uri_extensions=['.md', '.txt', '.py']
+
 let g:twvim_debug = 1
 let g:os = 'Darwin'
 if g:twvim_debug | echom "-D- Debugging is activated." | endif
@@ -58,7 +63,8 @@ let g:twvim_config = {
       \ 'diary_path': '/Users/Q187392/vimwiki/diary',
 \ }
 
-" to aovid prompting
+
+" to avoid prompting
 set shortmess+=at
 "set cmdheight=200
 packadd cfilter

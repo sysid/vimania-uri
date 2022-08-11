@@ -28,5 +28,5 @@ class TestSaveTwbm:
     def test_do_vimania_with_twbm(self, mocker, uri):
         mocker.patch("vimania_uri.environment.config.twbm_db_url", new="some_uri")
         mocked = mocker.patch("vimania_uri.md.mdnav.add_twbm", return_value=9999)
-        open_uri(URI(uri), save_twbm=True)
+        open_uri(URI(uri), save_twbm=True, twbm_integrated=True)
         mocked.assert_called_once()

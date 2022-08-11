@@ -10,6 +10,8 @@ PYTOPT	=
 VENV	= venv
 PIP		= venv/bin/pip
 
+VIM_PLUG="$(HOME)/dev/vim/tw-vim/config/plugins.vim"
+
 app_root = $(PROJ_DIR)/pythonx
 app_root ?= .
 pkg_src =  $(app_root)/vimania_uri
@@ -37,7 +39,7 @@ all: clean build upload tag  ## Build and upload
 	@echo "--------------------------------------------------------------------------------"
 
 ################################################################################
-# Testing, Building
+# Testing
 ################################################################################
 .PHONY: test
 test:  ## run tests
@@ -66,15 +68,19 @@ coverage:  ## Run tests with coverage
 tox:   ## Run tox
 	tox
 
+################################################################################
+# Building
+################################################################################
+.PHONY: copy-buku
+copy-buku:  ## copy-buku: copy buku.py from twbm
+	cp $(HOME)/dev/py/twbm/twbm/buku.py $(pkg_src)/buku.py
+
 .PHONY: build
 build: clean-vim ## build
 	@echo "building"
 	#python setup.py sdist
+	cp README.md pythonx/
 	pushd pythonx; python -m build; popd
-
-.PHONY: copy-buku
-copy-buku:  ## copy-buku: copy buku.py from twbm
-	cp $(HOME)/dev/py/twbm/twbm/buku.py $(pkg_src)/buku.py
 
 #.PHONY: build-vim-dev
 #build-vim-dev: _confirm ## copy all python packages into pythonx (for local installation)
@@ -85,12 +91,56 @@ copy-buku:  ## copy-buku: copy buku.py from twbm
 build-vim: _confirm clean-vim ## clean and re-install via pip into pythonx
 	pip install -r pythonx/requirements.txt --target pythonx
 
+.PHONY: clean-vim
+clean-vim:  ## clean pythonx directory for PyCharm development
+	@echo "Removing python packages from pythonx"
+	@pushd pythonx; git clean -d -x -f; popd
+
 
 .PHONY: requirements
 requirements:  ## create requirements.txt
-	pipenv lock -r > pythonx/requirements.txt
+	#pipenv lock -r > pythonx/requirements.txt
 	vim pythonx/requirements.txt
 
+.PHONY: vim-install
+vim-install:  ## vim Plug install
+	sed -i.bkp "s#^\"Plug 'https://github.com/sysid/vimania-uri.git'#Plug 'https://github.com/sysid/vimania-uri.git'#" $(VIM_PLUG)
+	sed -i.bkp "s#^Plug '~/dev/vim/vimania-uri'#\"Plug '~/dev/vim/vimania-uri'#" $(VIM_PLUG)
+	vim -c ':PlugInstall vimania-uri'
+
+.PHONY: vim-uninstall
+vim-uninstall:  ## vim Plug uninstall
+	[ -d "$(HOME)/.vim/plugged/vimania-uri" ] && rm -fr "$(HOME)/.vim/plugged/vimania-uri"
+	sed -i.bkp "s#^\"Plug '~/dev/vim/vimania-uri'#Plug '~/dev/vim/vimania-uri'#" $(VIM_PLUG)
+	sed -i.bkp "s#^Plug 'https://github.com/sysid/vimania-uri.git'#\"Plug 'https://github.com/sysid/vimania-uri.git'#" $(VIM_PLUG)
+
+
+################################################################################
+# Version, Uploading
+################################################################################
+.PHONY: upload
+upload:  ## upload to PyPi
+	@echo "upload"
+	twine upload --verbose pythonx/dist/*
+
+.PHONY: tag
+tag:  ## tag with VERSION
+	@echo "tagging $(VERSION)"
+	git tag -a $(VERSION) -m "version $(VERSION)"
+	git push --tags
+
+.PHONY: bump-major
+bump-major:  ## bump-major
+	bumpversion --verbose major
+
+.PHONY: bump-minor
+bump-minor:  ## bump-minor
+	bumpversion --verbose minor
+
+.PHONY: bump-patch
+bump-patch:  ## bump-patch
+	#bumpversion --dry-run --allow-dirty --verbose patch
+	bumpversion --verbose patch
 
 
 ################################################################################
@@ -120,47 +170,7 @@ mypy:  ## check type hint annotations
 	mypy --config-file setup.cfg $(pkg_src)
 
 ################################################################################
-# Version, Uploading
-################################################################################
-.PHONY: upload
-upload:  ## upload to PyPi
-	@echo "upload"
-	twine upload --verbose pythonx/dist/*
-
-.PHONY: tag
-tag:  ## tag with VERSION
-	@echo "tagging $(VERSION)"
-	git tag -a $(VERSION) -m "version $(VERSION)"
-	git push --tags
-
-.PHONY: install
-install: _install  ## pipx install
-	./scripts/cp_venv.sh dev
-	cp -a ~/dev/py/pure-sql/src/pure_sql ~/dev/vim/vimania/pythonx
-
-.PHONY: _install
-_install: clean-vim uninstall
-	pipx install $(app_root)
-
-.PHONY: uninstall
-uninstall:  ## pipx uninstall
-	-pipx uninstall vimania-uri
-
-.PHONY: bump-major
-bump-major:  ## bump-major
-	bumpversion --verbose major
-
-.PHONY: bump-minor
-bump-minor:  ## bump-minor
-	bumpversion --verbose minor
-
-.PHONY: bump-patch
-bump-patch:  ## bump-patch
-	#bumpversion --dry-run --allow-dirty --verbose patch
-	bumpversion --verbose patch
-
-################################################################################
-#
+# Clean
 ################################################################################
 .PHONY: clean
 clean: clean-build clean-pyc  ## remove all build, test, coverage and Python artifacts
@@ -179,11 +189,6 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
-
-.PHONY: clean-vim
-clean-vim:  ## clean pythonx directory for PyCharm development
-	@echo "Removing python packages from pythonx"
-	@pushd pythonx; git clean -d -x -f; popd
 
 ################################################################################
 # Misc
