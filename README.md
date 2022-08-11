@@ -1,11 +1,12 @@
-# Vimania: URI navigation for VIM markdown
+# vimania-uri
+# Modern URI navigation for VIM
 
 [![PyPI Version][pypi-image]][pypi-url]
 
-> handle URI's like double-clicking, but with VIM shortcut
+> Handle URI's like double-clicking, but with simple VIM shortcut.
 
 Key features:
-1. open/navigate arbitrary URIs in markdown files
+1. open/navigate arbitrary URIs in text files
 2. Save interesting URI seamless in bookmark manager: [twbm](https://github.com/sysid/twbm).
 3. Can handle almost every kind of URI
 
@@ -51,13 +52,11 @@ Position cursor in normal mode on URI and just say `go`.
     `[link]({filename}../posts/second.md)`.
 
 Note, all links above are functional with vim and vimania installed.
-Vimania's URI handling is inspired by [mdnav][mdnav].
 
 [label]: https://google.com
 [foo]: https://wikipedia.org
 [fml]: https://github.com/prashanthellina/follow-markdown-links
 [attr-lists]: https://pythonhosted.org/Markdown/extensions/attr_list.html
-[mdnav]: https://github.com/chmp/mdnav
 
 
 ### Usage
