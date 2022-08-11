@@ -75,12 +75,12 @@ tox:   ## Run tox
 copy-buku:  ## copy-buku: copy buku.py from twbm
 	cp $(HOME)/dev/py/twbm/twbm/buku.py $(pkg_src)/buku.py
 
-.PHONY: build
-build: clean-vim ## build
-	@echo "building"
-	#python setup.py sdist
-	cp README.md pythonx/
-	pushd pythonx; python -m build; popd
+#.PHONY: build
+#build: clean-vim ## build
+#	@echo "building"
+#	#python setup.py sdist
+#	cp README.md pythonx/
+#	pushd pythonx; python -m build; popd
 
 #.PHONY: build-vim-dev
 #build-vim-dev: _confirm ## copy all python packages into pythonx (for local installation)

@@ -103,25 +103,6 @@ The behavior can be configured via the following options:
 - `g:vimania_uri_twbm_integration`:
     Boolean flag to configure twbm integration
 
-
-## Bookmark Manager Integratiaon
-- If [twbm · PyPI](https://pypi.org/project/twbm/) is installed `vimania-uri` pushes URI's to the bookmark database with `goo`.
-- Pushed bookmarks have default tag `vimania` in the bookmark-manager db.
-- Bookmarks are also removed from bookmark-manager database when removed from markdown file with `dd`
-
-### Configuration
-```vim
-"Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}
-  let g:vimania_uri_extensions=['.md','.txt','.rst','.py']
-  let g:vimania_uri_twbm_integration=1
-```
-For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
-
-`export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"`
-
-
-
-
 ## Installation
 - vim needs to be configured with python support
 - `pip` must be in path in order to install required dependencies into `vimania/pythonx` (no pollution of system python).
@@ -129,10 +110,13 @@ For bookmark manager [twbm](https://github.com/sysid/twbm) integration the datab
 1. Install `https://github.com/sysid/vimania` with your favourite VIM plugin manager
 2. Install python `requirements.txt` into `<vimplugins>/vimania-uri/pythonx`
 
+### Configuration
 Using [vim-plug](https://github.com/junegunn/vim-plug):
-
-`Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}`
-
+```vim
+Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}
+  let g:vimania_uri_extensions=['.md','.txt','.rst','.py']
+  let g:vimania_uri_twbm_integration=1
+```
 
 ### URIs insertion convenience method:
 I recommend configuring [UltiSnips](https://github.com/SirVer/ultisnips) snippets:
@@ -148,6 +132,18 @@ endsnippet
 Optional:
 - [twbm](https://github.com/sysid/twbm) for seamless bookmark manager integration
 - [UltiSnips](https://github.com/SirVer/ultisnips) for easy uri and todo creation
+
+
+
+## Bookmark Manager Integratiaon
+- If [twbm · PyPI](https://pypi.org/project/twbm/) is installed `vimania-uri` pushes URI's to the bookmark database with `goo`.
+- Pushed bookmarks have default tag `vimania` in the bookmark-manager db.
+- Bookmarks are also removed from bookmark-manager database when removed from markdown file with `dd`
+
+### Configuration
+For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
+
+`export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"`
 
 
 
