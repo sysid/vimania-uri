@@ -180,8 +180,8 @@ class VimOpen(Action):
 
         path = parse_uri(self.target)
         if not Path(path.fullpath).exists():
-            _log.error(f"{path.fullpath=} does not exists.")
-            raise FileNotFoundError(f"{path.fullpath=} does not exists")
+            _log.info(f"{path.fullpath=} does not exists. Creating...")
+            # raise FileNotFoundError(f"{path.fullpath=} does not exists")
         _log.debug(f"Opening {path.fullpath=}")
 
         # TODO: make space handling more robust?
