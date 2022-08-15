@@ -248,8 +248,10 @@ def call(args):
     except ImportError:
         subprocess.call(args)
     else:
-        args = ["shellescape(" + json.dumps(arg) + ")" for arg in args]
-        vim.command('execute "! " . ' + ' . " " . '.join(args))
+        subprocess.call(args)
+        # Triggers prompt on vim, not good!
+        # args = ["shellescape(" + json.dumps(arg) + ")" for arg in args]
+        # vim.command('execute "! " . ' + ' . " " . '.join(args))
 
 
 def parse_line(cursor, lines) -> URI | None:
