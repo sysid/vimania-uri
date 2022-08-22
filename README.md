@@ -26,7 +26,7 @@ Position cursor in normal mode on URI and just say `go`.
 - **URL links**:
     `[google](https://google.com)` will be opened with the OS browser.
 - **non text files**:
-    if the option `g:mdnav#Extensions` is set, non text files will be opened
+    if the option `g:vimania-uri#Extensions` is set, non text files will be opened
     via the operating system.
     This behavior is handy when linking to binary documents, for example PDFs.
 - **internal links**:
@@ -35,9 +35,8 @@ Position cursor in normal mode on URI and just say `go`.
     Currently both github style anchors, all words lowercased and hyphenated,
     and jupyter style anchros, all words hyphenated, are supported.
 - **reference style links**:
-    for links of the form `[foo][label]`, mdnav will lookup the corresponding
+    for links of the form `[foo][label]`, vimania-uri will lookup the corresponding
     label and open the target referenced there.
-    This mechanism works will all link targets.
 - **implicit name links**:
     for links of the form `[foo][]` will use `foo` as the label and then follow
     the logic of reference style links.
@@ -47,7 +46,7 @@ Position cursor in normal mode on URI and just say `go`.
     This way fixed name references can be defined to prevent links from going
     stale after headings have been changed.
 - **local link format of pelican**:
-    mdnav handles `|filename| ...` and `{filename} ...` links as expected, for
+    vimania-uri handles `|filename| ...` and `{filename} ...` links as expected, for
     example `[link](|filename|./second.md)` and
     `[link]({filename}../posts/second.md)`.
 
@@ -76,7 +75,7 @@ The following links can be used (the possible cursor positions are indicated by 
     This [link](|filename|./foo.md) will open `./foo.md` inside vim.
          ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    If `g:mdnav#Extensions` is set to `.md, .MD`, enter will open
+    If `g:vimania-uri#Extensions` is set to `.md, .MD`, enter will open
     `example.pdf` inside the default PDF reader for this
     [link](|filename|./example.pdf).
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
