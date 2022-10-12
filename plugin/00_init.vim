@@ -68,3 +68,33 @@ function! TwErr(msg) abort  "{{{
   echomsg "-E-" a:msg
   echohl None
 endfunction  "}}}
+
+" ################################################################################
+" twvim_init
+" ################################################################################
+if exists('g:twvim_init')
+  finish
+endif
+let g:twvim_init = 1
+
+command -bang -range=0      -nargs=? -complete=expression TwDebug
+    \ if g:twvim_debug == 1 |
+    \   if !empty(<q-args>) |
+    \     let file = expand('%:p:t') |
+    \     echom printf("-D- %s: %s", file, eval(scriptease#prepare_eval(<q-args>))) |
+    \   endif |
+    \ endif
+
+command -bang -range=0      -nargs=? -complete=expression TwLog
+    \   if !empty(<q-args>) |
+    \     let file = expand('%:p:t') |
+    \     echom printf("-M- %s: %s", file, eval(scriptease#prepare_eval(<q-args>))) |
+    \   endif |
+
+command -bang -range=0      -nargs=? -complete=expression TwErr
+    \   if !empty(<q-args>) |
+    \     let file = expand('%:p:t') |
+    \     echohl ErrorMsg
+    \     echom printf("-E- %s: %s", file, eval(scriptease#prepare_eval(<q-args>))) |
+    \     echohl None
+    \   endif |
