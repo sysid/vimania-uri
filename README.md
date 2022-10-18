@@ -3,7 +3,7 @@
 
 [![PyPI Version][pypi-image]][pypi-url]
 
-> Handle URI's like double-clicking, but with simple VIM shortcut.
+> Use arbitrary URI's like double-clicking them in your OS, but with VIM.
 
 Key features:
 1. open/navigate arbitrary URIs in text files
@@ -171,7 +171,7 @@ For bookmark manager [twbm](https://github.com/sysid/twbm) integration the datab
 ### Credits
 - It is inspired by and recommends to use [UltiSnips](https://github.com/SirVer/ultisnips).
 - URI handling is based on work of [mdnav](https://github.com/chmp/mdnav)
-- Bookmark management uses [jarun/buku](https://github.com/jarun/buku)
+- Bookmark management uses a fork of [jarun/buku](https://github.com/jarun/buku)
 
 
 #### Changelog
