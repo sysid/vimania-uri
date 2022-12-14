@@ -246,7 +246,9 @@ class JumpToAnchor(Action):
 
     @staticmethod
     def title_to_anchor(title) -> str:
-        PUNCTUATION_TO_REMOVE = '!"#$%&\'()*+,./:;<=>?@[\\]^_`{|}~'  # string.punctuation, keep -
+        PUNCTUATION_TO_REMOVE = (
+            "!\"#$%&'()*+,./:;<=>?@[\\]^_`{|}~"  # string.punctuation, keep -
+        )
         title = title.translate(str.maketrans("", "", PUNCTUATION_TO_REMOVE))
         return "-".join(fragment.lower() for fragment in title.split())
 

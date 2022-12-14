@@ -164,7 +164,7 @@ class VimaniaUriManager:
     @staticmethod
     @err_to_scratch_buffer
     def edit_vimania(args: str):
-        """ Edits text files and jumps to first position of pattern
+        """Edits text files and jumps to first position of pattern
         pattern is extracted via separator: '#'
 
         -- DEPRECATED --
