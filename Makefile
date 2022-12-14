@@ -1,14 +1,9 @@
 .DEFAULT_GOAL := help
 
-MAKE          = make
 VERSION       = $(shell cat VERSION)
 
-MAKE    = make
-PYTHON	= python
 PYTEST	= pytest --log-level=debug --capture=tee-sys --asyncio-mode=auto
 PYTOPT	=
-VENV	= venv
-PIP		= venv/bin/pip
 
 VIM_PLUG="$(HOME)/dev/vim/tw-vim/config/plugins.vim"
 
@@ -17,20 +12,8 @@ app_root ?= .
 pkg_src =  $(app_root)/vimania_uri
 tests_src = $(app_root)/tests
 
-define PRINT_HELP_PYSCRIPT
-import re, sys
-
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z0-9_-]+):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print("\033[36m%-20s\033[0m %s" % (target, help))
-endef
-export PRINT_HELP_PYSCRIPT
-
-.PHONY: help
-help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+# Makefile directory
+CODE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: all
 all: clean build upload tag  ## Build and upload
@@ -39,14 +22,30 @@ all: clean build upload tag  ## Build and upload
 	@echo "--------------------------------------------------------------------------------"
 
 ################################################################################
-# Testing
+# Developing \
+DEVELOPING:  ## ###############################################################
+.PHONY: dev
+dev: _confirm clean-vim  ## develop python module, prep accordingly
+	pycharm .
+
+.PHONY: dev-vim
+dev-vim:  ## open vim plugin and Makefile
+	vim -c 'OpenSession vimania-uri'
+
+.PHONY: _confirm
+_confirm:
+	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+	@echo "Action confirmed by user."
+
 ################################################################################
+# Testing \
+TESTING:  ## ##################################################################
 .PHONY: test
 test:  ## run tests
 	TW_VIMANIA_DB_URL=sqlite:///tests/data/vimania_todos_test.db python -m py.test tests -vv
 
-.PHONY: test-vim
-test-vim:  test-vim-uri  ## run tests-vim
+#.PHONY: test-vim
+#test-vim:  test-vim-uri  ## run tests-vim
 
 .PHONY: test-vim-uri
 test-vim-uri:  ## run tests-vim-vimania
@@ -69,8 +68,8 @@ tox:   ## Run tox
 	tox
 
 ################################################################################
-# Building
-################################################################################
+# Building, Uploading \
+BUILDING:  ## #################################################################
 .PHONY: copy-buku
 copy-buku:  ## copy-buku: copy buku.py from twbm
 	cp $(HOME)/dev/py/twbm/twbm/buku.py $(pkg_src)/buku.py
@@ -114,38 +113,29 @@ vim-uninstall:  ## vim Plug uninstall
 	sed -i.bkp "s#^\"Plug '~/dev/vim/vimania-uri'#Plug '~/dev/vim/vimania-uri'#" $(VIM_PLUG)
 	sed -i.bkp "s#^Plug 'https://github.com/sysid/vimania-uri.git'#\"Plug 'https://github.com/sysid/vimania-uri.git'#" $(VIM_PLUG)
 
-
-################################################################################
-# Version, Uploading
-################################################################################
 .PHONY: upload
 upload:  ## upload to PyPi
 	@echo "upload"
 	twine upload --verbose pythonx/dist/*
 
-.PHONY: tag
-tag:  ## tag with VERSION
-	@echo "tagging $(VERSION)"
-	git tag -a $(VERSION) -m "version $(VERSION)"
+.PHONY: bump-major
+bump-major:  ## bump-major, tag and push
+	bumpversion --commit --tag major
 	git push --tags
 
-.PHONY: bump-major
-bump-major:  ## bump-major
-	bumpversion --verbose major
-
 .PHONY: bump-minor
-bump-minor:  ## bump-minor
-	bumpversion --verbose minor
+bump-minor:  ## bump-minor, tag and push
+	bumpversion --commit --tag minor
+	git push --tags
 
 .PHONY: bump-patch
-bump-patch:  ## bump-patch
-	#bumpversion --dry-run --allow-dirty --verbose patch
-	bumpversion --verbose patch
-
+bump-patch:  ## bump-patch, tag and push
+	bumpversion --commit --tag patch
+	git push --tags
 
 ################################################################################
-# Code Quality
-################################################################################
+# Quality \
+QUALITY:  ## ##################################################################
 .PHONY: style
 style: isort format  ## perform code style format (black, isort)
 
@@ -170,16 +160,16 @@ mypy:  ## check type hint annotations
 	mypy --config-file setup.cfg $(pkg_src)
 
 ################################################################################
-# Clean
-################################################################################
+# Clean \
+CLEAN:  ## #################################################################
 .PHONY: clean
 clean: clean-build clean-pyc  ## remove all build, test, coverage and Python artifacts
 
 .PHONY: clean-build
 clean-build: ## remove build artifacts
-	rm -fr pythonx/build/
-	rm -fr pythonx/dist/
-	rm -fr pythonx/.eggs/
+	rm -fr build/
+	rm -fr dist/
+	rm -fr .eggs/
 	find . \( -path ./env -o -path ./venv -o -path ./.env -o -path ./.venv \) -prune -o -name '*.egg-info' -exec rm -fr {} +
 	find . \( -path ./env -o -path ./venv -o -path ./.env -o -path ./.venv \) -prune -o -name '*.egg' -exec rm -f {} +
 
@@ -190,18 +180,23 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-################################################################################
-# Misc
-################################################################################
-.PHONY: dev
-dev: _confirm clean-vim  ## develop python module, prep accordingly
-	pycharm .
 
-.PHONY: dev-vim
-dev-vim:  ## open vim plugin
-	vim -c 'OpenSession vimania-uri'
+################################################################################
+# Misc \
+MISC:  ## ############################################################
 
-.PHONY: _confirm
-_confirm:
-	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	@echo "Action confirmed by user."
+define PRINT_HELP_PYSCRIPT
+import re, sys
+
+for line in sys.stdin:
+	match = re.match(r'^([%a-zA-Z0-9_-]+):.*?## (.*)$$', line)
+	if match:
+		target, help = match.groups()
+		if target != "dummy":
+			print("\033[36m%-20s\033[0m %s" % (target, help))
+endef
+export PRINT_HELP_PYSCRIPT
+
+.PHONY: help
+help:
+	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
