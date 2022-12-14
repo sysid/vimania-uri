@@ -107,6 +107,13 @@ def test_open_link(target, open_link_kwargs, expected):
 jump_to_anchor_cases = [
     ("#foo", ["a", "# foo", "b"], 1),
     ("#foo-bar-baz", ["a", "#  Foo  BAR  Baz", "b"], 1),
+
+    # be more lenient and allow not only anchors but also headings
+    ("Battle of the datacontainers, Serialization", ["a", "### Battle of the datacontainers, Serialization", "b"], 1),
+    ("Battle of the datacontainers Serialization", ["a", "### Battle of the datacontainers, Serialization", "b"], 1),
+
+    ("Battle of the datacontainers, Serialization", ["a", "### Battle of the datacontainers, Serialization and more", "b"], 1),
+
     ("#foo", ["a", "#  Bar", "b"], None),
     ("#Foo-Bar-Baz", ["a", "### Foo Bar Baz", "b"], 1),
     # use attr-lists to define custom ids

@@ -35,6 +35,7 @@ function! GetURLTitle(url)
 endfunction
 command! -nargs=1 GetURLTitle call GetURLTitle(<f-args>)
 
+" DEPRECATED
 function! VimaniaEdit(args)
   call TwDebug(printf("Vimania args: %s", a:args))
   python3 xUriMgr.edit_vimania(vim.eval('a:args'))

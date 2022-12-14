@@ -4,6 +4,7 @@ import json
 import logging
 import os.path
 import re
+import string
 import subprocess
 import sys
 import webbrowser
@@ -77,7 +78,10 @@ def parse_uri(uri: URI) -> ParsedPath:
 
 
 def open_uri(
-        target: URI, open_in_vim_extensions: set = None, save_twbm=False, twbm_integrated=False
+    target: URI,
+    open_in_vim_extensions: set = None,
+    save_twbm=False,
+    twbm_integrated=False,
 ) -> Callable:
     """
     :returns: a callable that encapsulates the action to perform
@@ -98,9 +102,13 @@ def open_uri(
     # TODO: better error handling
     if twbm_integrated and save_twbm:
         if not config.is_installed_twbm:
-            _log.error(f"Environment variable TWBM_DB_URL not set. Required for twbm integration")
+            _log.error(
+                f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
+            )
             # return lambda: None
-            raise VimaniaException(f"Environment variable TWBM_DB_URL not set. Required for twbm integration")
+            raise VimaniaException(
+                f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
+            )
         id_ = add_twbm(str(target))
         if id_ != -1:
             return_message = f"new added twbm url: {id_=}"
@@ -115,10 +123,10 @@ def open_uri(
         return OSOpen(target)
 
     if target.startswith("|filename|"):
-        target = target[len("|filename|"):]
+        target = target[len("|filename|") :]
 
     if target.startswith("{filename}"):
-        target = target[len("{filename}"):]
+        target = target[len("{filename}") :]
 
     return VimOpen(target)
 
@@ -209,7 +217,9 @@ class JumpToAnchor(Action):
         # noinspection PyUnresolvedReferences
         import vim
 
+        _log.debug(f"{self.target=}")
         line = self.find_anchor(self.target, vim.current.buffer)
+        _log.debug(f"{line=}")
 
         if line is None:
             return
@@ -217,28 +227,38 @@ class JumpToAnchor(Action):
         vim.current.window.cursor = (line + 1, 0)
 
     @classmethod
-    def find_anchor(cls, target, buffer):
+    def find_anchor(cls, target, buffer) -> int:
         needle = cls.norm_target(target)
+        _log.debug(f"{target=}, {needle=}, {buffer=}")
 
         for (idx, line) in enumerate(buffer):
             m = cls.HEADING_PATTERN.match(line)
-            if m is not None and cls.title_to_anchor(m.group("title")) == needle:
-                return idx
+            if m is not None:
+                title = m.group("title")
+                anchor = cls.title_to_anchor(title)
+                _log.debug(f"{title=}, {anchor=}")
+                if anchor.startswith(needle):
+                    return idx
 
             m = cls.ATTR_LIST_PATTERN.search(line)
             if m is not None and needle == m.group("id"):
                 return idx
 
     @staticmethod
-    def title_to_anchor(title):
+    def title_to_anchor(title) -> str:
+        PUNCTUATION_TO_REMOVE = '!"#$%&\'()*+,./:;<=>?@[\\]^_`{|}~'  # string.punctuation, keep -
+        title = title.translate(str.maketrans("", "", PUNCTUATION_TO_REMOVE))
         return "-".join(fragment.lower() for fragment in title.split())
 
-    @staticmethod
-    def norm_target(target):
+    # @staticmethod
+    @classmethod
+    def norm_target(cls, target):
         if target.startswith("#"):
             target = target[1:]
 
-        return target.lower()
+        # be more lenient and allow not only anchors but also headings
+        # return target.lower()
+        return cls.title_to_anchor(target)
 
 
 def call(args):
