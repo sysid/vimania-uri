@@ -1,18 +1,16 @@
-# vimania-uri
 # Modern URI navigation for VIM
 
-[![PyPI Version][pypi-image]][pypi-url]
-
-> Use arbitrary URI's like double-clicking them in your OS, but with VIM.
+> Use arbitrary URI's like double-clicking them in your OS, but from within VIM.
 
 Key features:
 1. open/navigate arbitrary URIs in text files
-2. Save interesting URI seamless in bookmark manager: [twbm](https://github.com/sysid/twbm).
-3. Can handle almost every kind of URI
+2. handles any kind of URI
+3. Optional: Save URI/URL seamless in CLI bookmark manager: [twbm](https://github.com/sysid/twbm).
 
 
-## Super simple user interface
-Position cursor in normal mode on URI and just say `go`.
+## User Interface
+
+> Position cursor on URI and type `go`.
 
     go (open URL, directories, files, ...)
     goo (open and save to bookmark DB)
@@ -50,17 +48,10 @@ Position cursor in normal mode on URI and just say `go`.
     example `[link](|filename|./second.md)` and
     `[link]({filename}../posts/second.md)`.
 
-Note, all links above are functional with vim and vimania installed.
 
-[label]: https://google.com
-[foo]: https://wikipedia.org
-[fml]: https://github.com/prashanthellina/follow-markdown-links
-[attr-lists]: https://pythonhosted.org/Markdown/extensions/attr_list.html
+#### Usage
 
-
-### Usage
-
-Inside normal model with an open markdown document, press `go` on a markdown link to open it.
+In normal model within a markdown document, press `go` on a markdown-link to open it.
 If the link is a local file it will be opened in vim (`C-o` will get you back),
 otherwise it will be opened via OS (.e.g Web-Broser, Microsoft Office, ...)
 
@@ -99,16 +90,11 @@ The behavior can be configured via the following options:
     and `xdg-open` on linux).
     This option may be useful to link to non-text documents, say PDF files.
 - `g:vimania_uri_twbm_integration`:
-    Boolean flag to configure twbm integration
+    Boolean flag to configure twbm integration (see below)
+
+<br>
 
 ## Installation
-- vim needs to be configured with python support
-- `pip` must be in path in order to install required dependencies into `vimania/pythonx` (no pollution of system python).
-
-1. Install `https://github.com/sysid/vimania` with your favourite VIM plugin manager
-2. Install python `requirements.txt` into `<vimplugins>/vimania-uri/pythonx`
-
-### Configuration
 Using [vim-plug](https://github.com/junegunn/vim-plug):
 ```vim
 Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}
@@ -116,72 +102,43 @@ Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/
   let g:vimania_uri_twbm_integration=1
 ```
 
-### URIs insertion convenience method:
-I recommend configuring [UltiSnips](https://github.com/SirVer/ultisnips) snippets:
+#### Manual
+1. Install `https://github.com/sysid/vimania-uri` with your favourite VIM plugin manager
+2. Install python `requirements.txt` into `<vimplugins>/vimania-uri/pythonx`
+
+- vim needs to be configured with python support
+- `pip` must be in path in order to install required dependencies into `vimania/pythonx` (no pollution of system python).
+- dependencies see [requirements.txt](requirements.txt)
+
+
+#### Convenience Method
+- [UltiSnips](https://github.com/SirVer/ultisnips) for easy uri and todo creation:
 ```
 snippet uri "link/uri for Vimania"
 [${1:link}]($1)
 endsnippet
 ```
-
-### Dependencies
-- see [requirements.txt](requirements.txt)
-
-Optional:
-- [twbm](https://github.com/sysid/twbm) for seamless bookmark manager integration
-- [UltiSnips](https://github.com/SirVer/ultisnips) for easy uri and todo creation
-
-
+<br>
 
 ## Bookmark Manager Integratiaon
 - If [twbm · PyPI](https://pypi.org/project/twbm/) is installed `vimania-uri` pushes URI's to the bookmark database with `goo`.
 - Pushed bookmarks have default tag `vimania` in the bookmark-manager db.
 - Bookmarks are also removed from bookmark-manager database when removed from markdown file with `dd`
 
-### Configuration
+#### Configuration
 For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
 
 `export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"`
 
 
 
-
-# Development
-- VIM needs to find vimania dependencies in `pythonx`.
-- vim interface cannot be tested within PyCharm, needs to be called from VIM.
-- For python changes it is important to restart vim after every change in order to enforce proper reload:
-  this is best automated with a Vader script: `run_tests.sh testfile` in tests directory.
-- vimscript changes can be reloaded as usual
-- `buku.py` needs to be copied from `twbm` package as it is used to push URLs to buku DB.
-
-### Testing
-#### Python: pytest
-`make test`
-
-#### VIM: Vader
-`make test-vim`
-
-#### Smoke Test
-- after installation with [Plug](https://github.com/junegunn/vim-plug) run vader tests
-
-### Architecture
-![Component](doc/component-vimenia.png)
-
-
-### Credits
+## Credits
 - It is inspired by and recommends to use [UltiSnips](https://github.com/SirVer/ultisnips).
 - URI handling is based on work of [mdnav](https://github.com/chmp/mdnav)
 - Bookmark management uses a fork of [jarun/buku](https://github.com/jarun/buku)
 
 
-#### Changelog
-[CHANGELOG.md](https://github.com/sysid/vimania-uri/blob/master/CHANGELOG.md)
+## Changelog
+[CHANGELOG](https://github.com/sysid/vimania-uri/blob/master/CHANGELOG.rst)
 
 <!-- Badges -->
-
-[pypi-image]: https://badge.fury.io/py/vimania-uri.svg
-[pypi-url]: https://pypi.org/project/vimania-uri/
-[build-image]: https://github.com/sysid/vimania-uri/actions/workflows/build.yml/badge.svg
-[build-url]: https://github.com/sysid/vimania-uri/actions/workflows/build.yml
-[coverage-image]: https://codecov.io/gh/sysid/vimania-uri/branch/master/graph/badge.svg
-[coverage-url]: https://codecov.io/gh/sysid/vimania-uri

@@ -48,7 +48,7 @@ test:  ## run tests
 #test-vim:  test-vim-uri  ## run tests-vim
 
 .PHONY: test-vim-uri
-test-vim-uri:  ## run tests-vim-vimania
+test-vim-uri: build-vim  ## run tests-vim-vimania (requires libs in pythonx: make build-vim
 	@echo "- > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > - > "
 	pushd tests; ./run_test.sh test_vimania_uri.vader; popd
 	@echo "- < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < - < "
@@ -73,18 +73,6 @@ BUILDING:  ## #################################################################
 .PHONY: copy-buku
 copy-buku:  ## copy-buku: copy buku.py from twbm
 	cp $(HOME)/dev/py/twbm/twbm/buku.py $(pkg_src)/buku.py
-
-#.PHONY: build
-#build: clean-vim ## build
-#	@echo "building"
-#	#python setup.py sdist
-#	cp README.md pythonx/
-#	pushd pythonx; python -m build; popd
-
-#.PHONY: build-vim-dev
-#build-vim-dev: _confirm ## copy all python packages into pythonx (for local installation)
-#	./scripts/cp_venv.sh dev
-#	cp -a ~/dev/py/pure-sql/src/pure_sql ~/dev/vim/vimania/pythonx
 
 .PHONY: build-vim
 build-vim: _confirm clean-vim ## clean and re-install via pip into pythonx
