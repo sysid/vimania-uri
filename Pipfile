@@ -10,7 +10,7 @@ pydantic = "*"
 beautifulsoup4 = "*"
 requests = "*"
 lxml = "*"
-pure-sql = {editable = true, path = "/Users/Q187392/dev/py/pure-sql"}
+pure-sql = {editable = true, path = "/Users/Q187392/dev/s/private/py-pure-sql"}
 
 [dev-packages]
 alembic = "*"
