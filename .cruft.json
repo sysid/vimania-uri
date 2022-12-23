@@ -1,0 +1,26 @@
+{
+  "template": "https://github.com/sysid/py-template",
+  "commit": "f24aced933306f4f07b67b669143b468bfc677ee",
+  "context": {
+    "cookiecutter": {
+      "package_display_name": "vimania-uri",
+      "package_name": "vimania_uri",
+      "project_name": "vimania_uri",
+      "repo_name": "vimania_uri",
+      "github_repo_name": "vimania_uri",
+      "github_name": "vimania_uri",
+      "package_short_description": "Modern URI navigation for VIM",
+      "version": "0.9.0",
+      "full_name": "sysid",
+      "email": "sysid@gmx.de",
+      "github_user_name": "sysid",
+      "license": "MIT license",
+      "year": "2022",
+      "_extensions": [
+        "jinja2_time.TimeExtension"
+      ],
+      "_template": "https://github.com/sysid/py-template"
+    }
+  },
+  "directory": null
+}
