@@ -7,7 +7,7 @@ name = "pypi"
 sqlalchemy = "*"
 typer = "*"
 pydantic = "*"
-beautifulsoup4 = "*"
+beautifulsoup4 = "*"  # bs4 is alias
 requests = "*"
 lxml = "*"
 pure-sql = {editable = true, path = "/Users/Q187392/dev/s/private/py-pure-sql"}

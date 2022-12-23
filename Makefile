@@ -7,9 +7,9 @@ PYTOPT	=
 
 VIM_PLUG="$(HOME)/dev/vim/tw-vim/config/plugins.vim"
 
-app_root = $(PROJ_DIR)/pythonx
+app_root = $(PROJ_DIR)
 app_root ?= .
-pkg_src =  $(app_root)/vimania_uri
+pkg_src =  $(app_root)/pythonx/vimania_uri
 tests_src = $(app_root)/tests
 
 # Makefile directory
@@ -42,7 +42,7 @@ _confirm:
 TESTING:  ## ##################################################################
 .PHONY: test
 test:  ## run tests
-	TW_VIMANIA_DB_URL=sqlite:///tests/data/vimania_todos_test.db python -m py.test tests -vv
+	TW_VIMANIA_DB_URL=sqlite:///tests/data/vimania_todos_test.db python -m pytest tests -vv
 
 #.PHONY: test-vim
 #test-vim:  test-vim-uri  ## run tests-vim
