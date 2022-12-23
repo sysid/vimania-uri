@@ -4,13 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sqlalchemy = "*"
 typer = "*"
 pydantic = "*"
 beautifulsoup4 = "*"  # bs4 is alias
 requests = "*"
 lxml = "*"
-pure-sql = {editable = true, path = "/Users/Q187392/dev/s/private/py-pure-sql"}
 
 [dev-packages]
 alembic = "*"
