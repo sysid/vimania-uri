@@ -1,21 +1,21 @@
 # Modern URI navigation for VIM
 
-> Use arbitrary URI's like double-clicking them in your OS, but from within VIM.
+> Double-click->Open. But for VIM. No mouse.
 
-Key features:
-1. open/navigate arbitrary URIs in text files
-2. handles any kind of URI
-3. Optional: Save URI/URL seamless in CLI bookmark manager: [twbm](https://github.com/sysid/twbm).
+# Key Features
+1. Open URIs, html, docx, pptx, jpg, png, mp3, ...
+2. Handle almost any URI
+3. Paste URLs with human-friendly description
 
+![demo](vimania-uri-demo.png)
 
 ## User Interface
 
 > Position cursor on URI and type `go`.
 
-    go (open URL, directories, files, ...)
-    goo (open and save to bookmark DB)
-    dd (delete URI containing line from markdown and DB)
+    go
 
+## Link Types
 - **local text links**:
     `[foo](second.md)` will be opened inside vim.
     If the target contains line number as in `[foo](second.md:30)`, the line
@@ -99,22 +99,17 @@ Using [vim-plug](https://github.com/junegunn/vim-plug):
 ```vim
 Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/requirements.txt --target pythonx'}
   let g:vimania_uri_extensions=['.md','.txt','.rst','.py']
-  let g:vimania_uri_twbm_integration=1
+  let g:vimania_uri_twbm_integration=1  # if twbm is installed
 ```
-
-#### Manual
-1. Install `https://github.com/sysid/vimania-uri` with your favourite VIM plugin manager
-2. Install python `requirements.txt` into `<vimplugins>/vimania-uri/pythonx`
-
 - vim needs to be configured with python support
 - `pip` must be in path in order to install required dependencies into `vimania/pythonx` (no pollution of system python).
 - dependencies see [requirements.txt](requirements.txt)
 
 
-#### Convenience Method
-- [UltiSnips](https://github.com/SirVer/ultisnips) for easy uri and todo creation:
+#### Shortcut to create URI
+- [UltiSnips](https://github.com/SirVer/ultisnips) for easy URI creation:
 ```
-snippet uri "link/uri for Vimania"
+snippet uri "link/uri for markdown and vimania-uri"
 [${1:link}]($1)
 endsnippet
 ```
@@ -128,14 +123,16 @@ endsnippet
 #### Configuration
 For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
 
-`export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"`
+    export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"
 
+    goo (open and save to bookmark DB)
+    dd (delete URI containing line from markdown and DB)
 
 
 ## Credits
-- It is inspired by and recommends to use [UltiSnips](https://github.com/SirVer/ultisnips).
+- inspired by and recommends to use [UltiSnips](https://github.com/SirVer/ultisnips).
 - URI handling is based on work of [mdnav](https://github.com/chmp/mdnav)
-- Bookmark management uses a fork of [jarun/buku](https://github.com/jarun/buku)
+- Bookmark management is based on work of [jarun/buku](https://github.com/jarun/buku)
 
 
 ## Changelog
