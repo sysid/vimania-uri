@@ -52,6 +52,8 @@ parse_link_cases = [
     ),
     # With Variables
     (["[md-doc]($HO^ME/vimwiki/help.md)"], "$HOME/vimwiki/help.md"),
+    # path with spaces
+    (["[]('$HO^ME/vimwiki bla/help.md')"], "'$HOME/vimwiki bla/help.md'"),
 ]
 
 
@@ -74,7 +76,7 @@ def _find_cursor(lines):
 
         else:
             cursor = (row, pos)
-            lines_without_cursor.append(line[:pos] + line[pos + 1 :])
+            lines_without_cursor.append(line[:pos] + line[pos + 1:])
 
     return cursor, lines_without_cursor
 
@@ -246,3 +248,23 @@ def test_full_path(mocker):
 
     path = mdnav.parse_uri("$XXX_NOT_EXIST/foo.md#hello-world")
     assert "$XXX_NOT_EXIST/foo.md" in path.fullpath
+
+
+@pytest.mark.parametrize(
+    ("line", "expected"),
+    (
+        ("^$HOME/xxx", "$HOME/xxx"),
+        ("^$HOME/xxx bla blub", "$HOME/xxx"),
+        ("my line $HO^ME/xxx bla blub", "$HOME/xxx"),
+        ("my 'line' $HOME/xxx^ bla blub'", "$HOME/xxx"),
+        # invalid path
+        ("^$HOME/xxx|blub", None),
+
+    )
+)
+def test_check_path(line, expected):
+    cursor, mod_lines = _find_cursor([line])
+    assert len(mod_lines) == 1, f"too many lines: {mod_lines=}"
+
+    link_text, rel_column = mdnav.check_path(mod_lines[0], cursor[1])
+    assert link_text == expected

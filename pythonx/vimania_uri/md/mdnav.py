@@ -121,10 +121,10 @@ def open_uri(
         return OSOpen(target)
 
     if target.startswith("|filename|"):
-        target = target[len("|filename|") :]
+        target = target[len("|filename|"):]
 
     if target.startswith("{filename}"):
-        target = target[len("{filename}") :]
+        target = target[len("{filename}"):]
 
     return VimOpen(target)
 
@@ -274,6 +274,30 @@ def call(args):
         # vim.command('execute "! " . ' + ' . " " . '.join(args))
 
 
+def check_path(line: str, pos: int) -> Tuple[str | None, int]:
+    """Check if the cursor is on a path and return the path and the relative cursor position."""
+    start = line[:pos].rfind(" ") + 1  # handles also the case with pos == 0
+
+    # TODO: handle escapes
+    if start < 0:
+        return None, pos
+
+    end = line[start:].find(" ")
+    if end < 0:
+        end = len(line)
+
+    path = line[start: start + end]
+    try:
+        p = Path(path)
+        if any([c for c in ["*", "?", "[", "]", "|", "\"", "'", "<", ">", "!"] if c in str(p)]):
+            _log.info(f"Skipping {p} because it contains an invalid character.")
+            return None, pos
+        return path, pos - start
+    except ValueError:
+        _log.info(f"Skipping {p} because it contains an invalid character.")
+        return None, pos
+
+
 def parse_line(cursor, lines) -> URI | None:
     """Extract URI under cursor from text line"""
     row, column = cursor
@@ -290,6 +314,8 @@ def parse_line(cursor, lines) -> URI | None:
     m = reference_definition_pattern.match(line)
     if m is not None:
         return URI(m.group("link").strip())
+
+    link_text, rel_column = check_path(line, column)
 
     link_text, rel_column = select_from_start_of_link(line, column)
 
