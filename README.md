@@ -106,6 +106,7 @@ Plug 'https://github.com/sysid/vimania-uri.git', {'do': 'pip install -r pythonx/
 - vim needs to be configured with python support
 - `pip` must be in path in order to install required dependencies into `vimania/pythonx` (no pollution of system python).
 - dependencies see [requirements.txt](requirements.txt)
+- tested only on Linux/MacOS
 
 
 #### Shortcut to create URI
