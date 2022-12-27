@@ -123,7 +123,7 @@ endsnippet
 #### Configuration
 For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
 
-    export TWBM_DB_URL="sqlite:///$HOME/twbm/todos.db"
+    export TWBM_DB_URL="sqlite:///$HOME/twbm/bookmarks.db"
 
     goo (open and save to bookmark DB)
     dd (delete URI containing line from markdown and DB)

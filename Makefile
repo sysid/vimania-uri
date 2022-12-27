@@ -42,7 +42,7 @@ _confirm:
 TESTING:  ## ##################################################################
 .PHONY: test
 test:  ## run tests
-	TW_VIMANIA_DB_URL=sqlite:///tests/data/vimania_todos_test.db python -m pytest tests -vv
+	python -m pytest tests -vv
 
 #.PHONY: test-vim
 #test-vim:  test-vim-uri  ## run tests-vim
@@ -56,7 +56,7 @@ test-vim-uri: build-vim  ## run tests-vim-vimania (requires libs in pythonx: mak
 .PHONY: coverage
 coverage:  ## Run tests with coverage
 	python -m coverage erase
-	TW_VIMANIA_DB_URL=sqlite:///tests/data/vimania_todos_test.db python -m coverage run --include=$(pkg_src)/* --omit=$(pkg_src)/buku.py -m pytest -ra
+	python -m coverage run --include=$(pkg_src)/* --omit=$(pkg_src)/buku.py -m pytest -ra
 	#python -m coverage report -m
 	python -m coverage html
 	python -m coverage report -m

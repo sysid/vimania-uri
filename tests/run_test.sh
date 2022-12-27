@@ -39,7 +39,7 @@ fi
 #prep-db  # no DB required
 prep-twbm
 
-TW_VIMANIA_DB_URL=sqlite:///data/vader.db vim -Nu <(cat << EOF
+vim -Nu <(cat << EOF
 filetype off
 set rtp+=~/.vim/plugged/vader.vim
 set rtp+=~/.vim/plugged/vim-misc

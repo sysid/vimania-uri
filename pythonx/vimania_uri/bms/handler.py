@@ -37,9 +37,9 @@ def delete_twbm(line: str) -> Tuple[int, str]:
         raise VimaniaException(f"Cannot extract url from: {line}")
 
     url = match.group(1)
-    id_ = BukuDb(dbfile=config.dbfile_twbm).get_rec_id(url=url)  # exact match
+    id_ = BukuDb(dbfile=config.dbfile_twbm).get_rec_id(url=url)  # exact match, error resilient
     if id_ == -1:
-        _log.info(f"{url=} not in DB {config.dbfile_twbm}")
+        _log.info(f"{url=} not in DB {config.dbfile_twbm=}")
         url = ""
     else:
         # (1, 'http://example.com', 'example title', ',tags1,', 'randomdesc', 0))
