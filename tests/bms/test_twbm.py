@@ -3,6 +3,7 @@ from vimania_uri.md import open_uri
 from vimania_uri.md.mdnav import URI
 
 
+@pytest.mark.skip(reason="deprecated, will be removed in next release")
 class TestSaveTwbm:
     @pytest.mark.parametrize(
         ("uri",),
