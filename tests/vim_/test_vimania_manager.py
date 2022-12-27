@@ -18,6 +18,7 @@ def mock_vim(mocker):
     return mock_vim
 
 
+@pytest.mark.skip(reason="not applicable currently")
 @pytest.mark.usefixtures("mock_vim")
 class TestVimaniaUriManager:
     def test_twbm(self, mocker, mock_vim):

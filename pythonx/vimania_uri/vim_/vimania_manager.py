@@ -122,20 +122,20 @@ class VimaniaUriManager:
         target = md.parse_line(cursor, lines)
         _log.debug(f"open {target=} from {current_file=}")
 
-        # TODO: better error handling
-        if self.twbm_integrated and save_twbm:
-            if not config.is_installed_twbm:
-                _log.error(
-                    f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
-                )
-                # return lambda: None
-                raise VimaniaException(
-                    f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
-                )
-            id_ = add_twbm(str(target))
-            if id_ != -1:
-                return_message = f"new added twbm url: {id_=}"
-                _log.info(f"twbm added: {id_}")
+        # # TODO: better error handling
+        # if self.twbm_integrated and save_twbm:
+        #     if not config.is_installed_twbm:
+        #         _log.error(
+        #             f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
+        #         )
+        #         # return lambda: None
+        #         raise VimaniaException(
+        #             f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
+        #         )
+        #     id_ = add_twbm(str(target))
+        #     if id_ != -1:
+        #         return_message = f"new added twbm url: {id_=}"
+        #         _log.info(f"twbm added: {id_}")
 
         action = md.open_uri(
             target,
