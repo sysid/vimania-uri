@@ -2,6 +2,8 @@
 
 > Double-click->Open. But for VIM. No mouse.
 
+Background: https://sysid.github.io/vimania-uri/
+
 # Key Features
 1. Open URIs, html, docx, pptx, jpg, png, mp3, ...
 2. Handle almost any URI
