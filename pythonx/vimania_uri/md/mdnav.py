@@ -167,8 +167,8 @@ class OSOpen(Action):
     def __call__(self):
         p = parse_uri(self.target)
         if not Path(p.fullpath).exists():
-            _log.error(f"{p.fullpath=} does not exists.")
-            raise FileNotFoundError(f"{p.fullpath=} does not exists")
+            _log.error(f"{p} [{p.fullpath}] does not exists")
+            raise FileNotFoundError(f"{p} [{p.fullpath}] does not exists")
         _log.debug(f"Opening {p.fullpath=}")
 
         if sys.platform.startswith("linux"):
@@ -276,6 +276,10 @@ def call(args):
 
 def check_path(line: str, pos: int) -> Tuple[str | None, int]:
     """Check if the cursor is on a path and return the path and the relative cursor position."""
+    if len(line) <= pos:
+        return None, 0
+    if line[pos] in " \t":
+        return None, pos
     start = line[:pos].rfind(" ") + 1  # handles also the case with pos == 0
 
     # TODO: handle escapes
@@ -290,8 +294,7 @@ def check_path(line: str, pos: int) -> Tuple[str | None, int]:
     try:
         p = Path(path)
         if any([c for c in ["*", "?", "[", "]", "|", "\"", "'", "<", ">", "!"] if c in str(p)]):
-            _log.info(f"Skipping {p} because it contains an invalid character.")
-            return None, pos
+            raise ValueError(f"Skipping {p} because it contains an invalid character.")
         return path, pos - start
     except ValueError:
         _log.info(f"Skipping {p} because it contains an invalid character.")
@@ -306,16 +309,21 @@ def parse_line(cursor, lines) -> URI | None:
     _log.debug("handle line %s (%s, %s)", line, row, column)
 
     # TODO: this only matches last URl in line with several URLs
+    ### 1. Return with URL
     m = URL_PATTERN.match(line)
     if m is not None:
-        return m.group(1).strip()
+        return URI(m.group(1).strip())
 
+    ### 2. Return with Markdown link
     # [.strip_me.](....)
     m = reference_definition_pattern.match(line)
     if m is not None:
         return URI(m.group("link").strip())
 
+    ### 2. Return with local path
     link_text, rel_column = check_path(line, column)
+    if link_text is not None:
+        return URI(link_text)
 
     link_text, rel_column = select_from_start_of_link(line, column)
 
