@@ -8,12 +8,10 @@ from typing import Dict, Tuple
 import bs4
 import requests
 from vimania_uri import md
-from vimania_uri.bms.handler import delete_twbm, add_twbm
+from vimania_uri.bms.handler import delete_twbm
 from vimania_uri.exception import VimaniaException
 from vimania_uri.pattern import URL_PATTERN
 from vimania_uri.vim_ import vim_helper
-
-from vimania_uri.environment import config
 
 """ Python VIM Interface Wrapper """
 
@@ -49,7 +47,7 @@ def err_to_scratch_buffer(func):
         # noinspection PyBroadException
         try:
             return func(*args, **kwds)
-        except Exception as e:  # pylint: disable=bare-except
+        except Exception as _:  # pylint: disable=bare-except
             msg = """An error occured.
 
 Following is the full stack trace:
@@ -122,21 +120,6 @@ class VimaniaUriManager:
         target = md.parse_line(cursor, lines)
         _log.debug(f"open {target=} from {current_file=}")
 
-        # # TODO: better error handling
-        # if self.twbm_integrated and save_twbm:
-        #     if not config.is_installed_twbm:
-        #         _log.error(
-        #             f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
-        #         )
-        #         # return lambda: None
-        #         raise VimaniaException(
-        #             f"Environment variable TWBM_DB_URL not set. Required for twbm integration"
-        #         )
-        #     id_ = add_twbm(str(target))
-        #     if id_ != -1:
-        #         return_message = f"new added twbm url: {id_=}"
-        #         _log.info(f"twbm added: {id_}")
-
         action = md.open_uri(
             target,
             open_in_vim_extensions=self.extensions,
@@ -166,13 +149,14 @@ class VimaniaUriManager:
             _log.debug(f"twbm not integrated. Do nothing.")
         assert isinstance(args, str), f"Error: input must be string, got {type(args)}."
         try:
-            id_, url = delete_twbm(args)
+            urls = delete_twbm(args)
         except VimaniaException as e:
             vim.command(
                 f"echohl WarningMsg | echom 'Cannot extract url from: {args}' | echohl None"
             )
             return
-        vim.command(f"echom 'deleted twbm: {url} {id_=}'")
+        for url in urls:
+            vim.command(f"echom 'deleted twbm: {url[0]} {url[1]}'")
 
     @staticmethod
     @err_to_scratch_buffer

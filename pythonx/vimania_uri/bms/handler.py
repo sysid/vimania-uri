@@ -1,5 +1,6 @@
 import logging
-from typing import Tuple
+import re
+from typing import Tuple, Sequence
 
 from vimania_uri.buku import BukuDb
 from vimania_uri.environment import config
@@ -29,32 +30,31 @@ def add_twbm(url: str) -> int:
     return id_
 
 
-def delete_twbm(line: str) -> Tuple[int, str]:
+def delete_twbm(line: str) -> Sequence[Tuple[int, str]]:
     """Delete bookmarks, managed by vimania (tag: vimania)"""
-    match = URL_PATTERN.match(line)
-    if match is None:
-        _log.warning(f"Cannot extract url from: {line}")
-        raise VimaniaException(f"Cannot extract url from: {line}")
-
-    url = match.group(1)
-    id_ = BukuDb(dbfile=config.dbfile_twbm).get_rec_id(url=url)  # exact match, error resilient
-    if id_ == -1:
-        _log.info(f"{url=} not in DB {config.dbfile_twbm=}")
-        url = ""
-    else:
-        # (1, 'http://example.com', 'example title', ',tags1,', 'randomdesc', 0))
-        bm_var = BukuDb(dbfile=config.dbfile_twbm).get_rec_by_id(id_)
-
-        if "vimania" in bm_var[3]:
-            _log.debug(f"Deleting twbm: {url}")
-            if not BukuDb(dbfile=config.dbfile_twbm).delete_rec(
-                index=id_, delay_commit=False
-            ):
-                raise VimaniaException(
-                    f"Cannot delete {url=} from: {config.dbfile_twbm}"
-                )
+    # match = URL_PATTERN.match(line)
+    urls = []
+    matches = re.finditer(URL_PATTERN, line)
+    for match in matches:
+        url = match.group()
+        id_ = BukuDb(dbfile=config.dbfile_twbm).get_rec_id(url=url)  # exact match, error resilient
+        if id_ == -1:
+            _log.info(f"{url} not in DB {config.dbfile_twbm=}")
         else:
-            _log.debug(f"{url=} not managed by vimania, no deletion.")
-            url = "{url=} not managed by vimania, no deletion."
+            # (1, 'http://example.com', 'example title', ',tags1,', 'randomdesc', 0))
+            bm_var = BukuDb(dbfile=config.dbfile_twbm).get_rec_by_id(id_)
 
-    return id_, url
+            if "vimania" in bm_var[3]:
+                _log.debug(f"Deleting twbm: {url}")
+                if not BukuDb(dbfile=config.dbfile_twbm).delete_rec(
+                    index=id_, delay_commit=False
+                ):
+                    raise VimaniaException(
+                        f"Cannot delete {url=} from: {config.dbfile_twbm}"
+                    )
+            else:
+                _log.debug(f"{url=} not managed by vimania, no deletion.")
+                url = f"{url} not managed by vimania, no deletion."
+            urls.append((id_, url))
+
+    return urls

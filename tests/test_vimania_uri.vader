@@ -34,11 +34,12 @@ Then ():
   Log printf("Current Line: %s", getline('.'))
   Assert 1 == line('$')
   Assert "" == getline('.')
-Execute(add twbm):
-  VimaniaDeleteTwbm wiht a [url](vm::http://www.vimania.tw) some more text
+Execute(twbm_delete):
+  VimaniaDeleteTwbm with [url](vm::http://www.vimania.tw) some more text
 Then ():
   Messages
-  Cfilter deleted
+  "Cfilter deleted
+  Cfilter not in DB
   Log printf("Len of location list: %s", len(getqflist()))
   Assert len(getqflist()) == 1
 
