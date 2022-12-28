@@ -1,0 +1,45 @@
+*vimania-uri*
+
+       _                       _                        _   ~
+__   _(_)_ __ ___   __ _ _ __ (_) __ _       _   _ _ __(_)  ~
+\ \ / / | '_ ` _ \ / _` | '_ \| |/ _` |_____| | | | '__| |  ~
+ \ V /| | | | | | | (_| | | | | | (_| |_____| |_| | |  | |  ~
+  \_/ |_|_| |_| |_|\__,_|_| |_|_|\__,_|      \__,_|_|  |_|  ~
+
+
+==============================================================================
+CONTENTS                                                 *vimania-uri-contents*
+
+    1. Usage ................ |vimania-uri-usage|
+    2. Functions............. |vimania-uri-functions|
+    3. License .............. |vimania-uri-license|
+
+==============================================================================
+USAGE                                                       *vimania-uri-usage*
+
+Handle all URIs transparently simialr to `gx` and `ge`. Tries to be
+consistent and provides one simple mapping for URI handling.
+
+Bonus: Paste URL in markdown in human readable format.
+
+see: https://github.com/sysid/vimania-uri-uri
+
+  <Plug>UriPasteMDLink: paste link from clipboard in human readable format
+  <Plug>HandleMd: open/handle URI under cursor
+  <Plug>HandleMdSave: open/handle URI under cursor and save bookmark DB
+                      (requires twbm integration)
+
+==============================================================================
+MAPPINGS                                                 *vimania-uri-mappings*
+
+    Default Mapping      | Details
+    ---------------------|----------------------------------------------
+    <Leader>vl           | Paste human readable link
+    go                   | handle or open URI (<Plug>HandleMd)
+    goo                  | go and save URI in twbm (<Plug>HandleMdSave)
+
+LICENSE                                                   *vimania-uri-license*
+==============================================================================
+BSD
+==============================================================================
+vim:tw=78:sw=2:ts=2:ft=help:norl:nowrap:
