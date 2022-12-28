@@ -13,7 +13,7 @@ from typing import Callable, NewType, Optional, Tuple
 from vimania_uri.bms.handler import add_twbm
 from vimania_uri.environment import config
 from vimania_uri.exception import VimaniaException
-from vimania_uri.pattern import URL_PATTERN
+from vimania_uri.pattern import URL_PATTERN, MD_LINK_PATTERN, LINK_PATTERN, REFERENCE_DEFINITION_PATTERN
 
 try:
     from urllib.parse import urlparse
@@ -21,10 +21,9 @@ except ImportError:
     # noinspection PyUnresolvedReferences
     from urlparse import urlparse
 
-URI = NewType("URI", str)
-
 _log = logging.getLogger("vimania-uri.md.mdnav")
 
+URI = NewType("URI", str)
 
 @dataclass
 class ParsedPath(object):
@@ -301,6 +300,54 @@ def check_path(line: str, pos: int) -> Tuple[str | None, int]:
         return None, pos
 
 
+@dataclass
+class MdnavMatch:
+    start: int  # start index of the match
+    end: int  # exclusive
+    url: str
+
+
+def check_url(line: str, column: int) -> Tuple[str | None, int]:
+    urls = []
+    matches = re.finditer(URL_PATTERN, line)
+    for match in matches:
+        urls.append(
+            MdnavMatch(
+                start=match.start(),
+                end=match.end(),
+                url=match.group(),
+            )
+        )
+        if match.start() <= column < match.end():
+            _log.debug(f"{urls=}")
+            return match.group(), column - match.start()
+    return None, column
+
+
+def check_md_link(line: str, column: int) -> Tuple[str | None, int]:
+    urls = []
+    matches = re.finditer(MD_LINK_PATTERN, line)
+    for match in matches:
+        urls.append(
+            MdnavMatch(
+                start=match.start(),
+                end=match.end(),
+                url=match.group(2),
+            )
+        )
+        if match.start() <= column < match.end():
+            _log.debug(f"{urls=}")
+            return match.group(2), column - match.start()
+    return None, column
+
+
+def check_reference_link(line: str, column: int) -> Tuple[str | None, int]:
+    m = REFERENCE_DEFINITION_PATTERN.match(line)
+    if m is not None:
+        return m.group("link"), column
+    return None, column
+
+
 def parse_line(cursor, lines) -> URI | None:
     """Extract URI under cursor from text line"""
     row, column = cursor
@@ -308,30 +355,29 @@ def parse_line(cursor, lines) -> URI | None:
 
     _log.debug("handle line %s (%s, %s)", line, row, column)
 
-    # TODO: this only matches last URl in line with several URLs
     ### 1. Return with URL
-    m = URL_PATTERN.match(line)
-    if m is not None:
-        return URI(m.group(1).strip())
+    link_text, rel_column = check_url(line, column)
+    if link_text is not None:
+        return URI(link_text.strip())
 
-    ### 2. Return with Markdown link
-    # [.strip_me.](....)
-    m = reference_definition_pattern.match(line)
-    if m is not None:
-        return URI(m.group("link").strip())
+    ### 2. Return with Markdown Reference Link
+    link_text, rel_column = check_reference_link(line, column)
+    if link_text is not None:
+        return URI(link_text.strip())
 
-    ### 2. Return with local path
+    ### 3. Return with local path
     link_text, rel_column = check_path(line, column)
     if link_text is not None:
         return URI(link_text)
 
+    ### 4. Parse Markdown Link
     link_text, rel_column = select_from_start_of_link(line, column)
 
     if not link_text:
         _log.info("could not find link text")
         return None
 
-    m = link_pattern.match(link_text)
+    m = LINK_PATTERN.match(link_text)
 
     if not m:
         _log.info("does not match link pattern")
@@ -365,42 +411,6 @@ def parse_line(cursor, lines) -> URI | None:
     return None
 
 
-reference_definition_pattern = re.compile(
-    r"""
-    ^
-        \[[^\]]*\]:             # reference def at start of line
-        (?P<link>.*)            # interpret everything else as link text
-    $
-""",
-    re.VERBOSE,
-)
-
-link_pattern = re.compile(
-    r"""
-    ^
-    (?P<link>
-        \[                      # start of link text
-            (?P<text>[^\]]*)    # link text
-        \]                      # end of link text
-        (?:
-            \(                  # start of target
-                (?P<direct>
-                    [^\)]*
-                )
-            \)                  # collect
-            |
-            \[
-                (?P<indirect>
-                    [^\]]*
-                )
-            \]
-        )
-    )
-    .*                  # any non matching characters
-    $
-""",
-    re.VERBOSE,
-)
 
 
 def select_from_start_of_link(line, pos) -> Tuple[str | None, int]:

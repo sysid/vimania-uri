@@ -1,4 +1,6 @@
 # https://regex101.com/
+from __future__ import print_function
+
 import re
 
 ################################################################################
@@ -6,10 +8,6 @@ import re
 ################################################################################
 # pattern = re.compile(r""".*vm::(.*)\)+""")
 from enum import IntEnum
-
-URL_PATTERN = re.compile(
-    r""".*(https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b[-a-zA-Z0-9@:%_\+.~#?&\/=]*)"""
-)
 
 ################################################################################
 # TODO_PATTERN
@@ -79,3 +77,42 @@ class MatchEnum(IntEnum):
     FILL2 = 6  # blanks
     TODO = 7  # text
     TAGS = 8  # {t:todo,py}
+
+
+URL_PATTERN = re.compile(r'((https?):((//)|(\\\\))+([\w\d:#@%/;$()~_?\+-=\\\.&](#!)?)*)', re.DOTALL)
+MD_LINK_PATTERN = re.compile(r'\[([^\]]+)\]\(([^\)]+)\)', re.DOTALL)  # not used currently but tested
+LINK_PATTERN = re.compile(
+    r"""
+    ^
+    (?P<link>
+        \[                      # start of link text
+            (?P<text>[^\]]*)    # link text
+        \]                      # end of link text
+        (?:
+            \(                  # start of target
+                (?P<direct>
+                    [^\)]*
+                )
+            \)                  # collect
+            |
+            \[
+                (?P<indirect>
+                    [^\]]*
+                )
+            \]
+        )
+    )
+    .*                  # any non matching characters
+    $
+""",
+    re.VERBOSE,
+)
+REFERENCE_DEFINITION_PATTERN = re.compile(
+    r"""
+    ^
+        \[[^\]]*\]:             # reference def at start of line
+        (?P<link>.*)            # interpret everything else as link text
+    $
+""",
+    re.VERBOSE,
+)

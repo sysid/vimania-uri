@@ -68,18 +68,24 @@ The following links can be used (the possible cursor positions are indicated by 
     This [link](|filename|./foo.md) will open `./foo.md` inside vim.
          ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    If `g:vimania-uri#Extensions` is set to `.md, .MD`, enter will open
-    `example.pdf` inside the default PDF reader for this
-    [link](|filename|./example.pdf).
+    This $HOME/dir will be opened inside file browser
+         ^^^^^^^^^
+
+    This $HOME/dir/present.pptx will open in Powerpoint
+         ^^^^^^^^^^^^^^^^^^^^^^
+
+
+    If `g:vimania-uri_Extensions` is set to `.md, .MD`
+
+    [link](|filename|./example.pdf) will be opened in pdf reader
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     Internal linking works, too: to link to the heading Usage, use
     this [link](#usage).
          ^^^^^^^^^^^^^^
 
-    Reference style [links][ref-style-link] work too.
+    Reference style [links][ref-style-link] will open http://example.com in browser
                     ^^^^^^^^^^^^^^^^^^^^^^^
-
     [ref-style-link]: http://example.com
 
 
@@ -87,14 +93,14 @@ The behavior can be configured via the following options:
 
 - `g:vimania_uri_extensions`:
     a comma separated list of file extensions.
-    Only file s with the given extensions will be opened in vim, all other
+    Only files with the given extensions will be opened in vim, all other
     files will be opened via the configured application (using `open` on OSX
     and `xdg-open` on linux).
-    This option may be useful to link to non-text documents, say PDF files.
+
 - `g:vimania_uri_twbm_integration`:
     Boolean flag to configure twbm integration (see below)
 
-<br>
+---
 
 ## Installation
 Using [vim-plug](https://github.com/junegunn/vim-plug):

@@ -104,6 +104,39 @@ class TestParseLine:
         link_text, rel_column = mdnav.check_path(mod_lines[0], cursor[1])
         assert link_text == expected
 
+    @pytest.mark.parametrize(
+        ("line", "expected"),
+        (
+            ("^http://yyy/xxx", "http://yyy/xxx"),
+            ("http://yyy/xxx^", None),
+            ("htt://yyy/^xxx", None),
+            ("Google: https://^www.google.com and here to Wikipedia: https://en.wikipedia.org",
+             "https://www.google.com"),
+            ("Google: https://www.google.com and here to Wikipedia: http://en.wikipedia.or^g",
+             "http://en.wikipedia.org"),
+            (" ^https://www.google.com/?q=xxx  xxxx", "https://www.google.com/?q=xxx"),
+        )
+    )
+    def test_check_url(self, line, expected):
+        cursor, mod_lines = _find_cursor([line])
+        assert len(mod_lines) == 1, f"too many lines: {mod_lines=}"
+
+        link_text, rel_column = mdnav.check_url(mod_lines[0], cursor[1])
+        assert link_text == expected
+
+    @pytest.mark.parametrize(
+        ("line", "expected"),
+        (
+            ("^[xxx](http://yyy/xxx)", "http://yyy/xxx"),
+        )
+    )
+    def test_check_md(self, line, expected):
+        cursor, mod_lines = _find_cursor([line])
+        assert len(mod_lines) == 1, f"too many lines: {mod_lines=}"
+
+        link_text, rel_column = mdnav.check_md_link(mod_lines[0], cursor[1])
+        assert link_text == expected
+
 
 open_uri_cases = [
     (None, {}, mdnav.NoOp(None)),
