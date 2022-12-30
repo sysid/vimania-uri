@@ -318,9 +318,12 @@ def check_url(line: str, column: int) -> Tuple[str | None, int]:
                 url=match.group(),
             )
         )
+        matched = match.group()
         if match.start() <= column < match.end():
+            if matched.endswith(")"):  # is markdown link
+                return None, column
             _log.debug(f"{urls=}")
-            return match.group(), column - match.start()
+            return matched, column - match.start()
     return None, column
 
 

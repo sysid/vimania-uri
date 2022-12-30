@@ -115,6 +115,8 @@ class TestParseLine:
             ("Google: https://www.google.com and here to Wikipedia: http://en.wikipedia.or^g",
              "http://en.wikipedia.org"),
             (" ^https://www.google.com/?q=xxx  xxxx", "https://www.google.com/?q=xxx"),
+
+            ("[xx](http://^yyy/xxx)", None),  # do not match markdown links
         )
     )
     def test_check_url(self, line, expected):
