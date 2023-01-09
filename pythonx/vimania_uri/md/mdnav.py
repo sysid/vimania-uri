@@ -116,7 +116,7 @@ def open_uri(
         return BrowserOpen(target)
 
     if not has_extension(target, open_in_vim_extensions):
-        _log.info("has no extension for opening in vim")
+        _log.info("has no extension for opening in vim, opening with OS.")
         return OSOpen(target)
 
     if target.startswith("|filename|"):
@@ -296,7 +296,7 @@ def check_path(line: str, pos: int) -> Tuple[str | None, int]:
             raise ValueError(f"Skipping {p} because it contains an invalid character.")
         return path, pos - start
     except ValueError:
-        _log.info(f"Skipping {p} because it contains an invalid character.")
+        _log.debug(f"Skipping {p} because it contains a non-path character.")
         return None, pos
 
 
