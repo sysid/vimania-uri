@@ -187,6 +187,7 @@ class VimaniaUriManager:
         pattern is extracted via separator: '#'
         """
         m = URL_PATTERN.match(url)
+        _log.debug(f"bs4 builders: {bs4.builder.builder_registry.builders}")
         if m is None:
             _log.warning(f"Invalid URL: {url=}")
             vim.command(f"echom 'Invalid URL: {url=}'")
@@ -198,6 +199,7 @@ class VimaniaUriManager:
             ).title.text.strip()
             # https://stackoverflow.com/a/27324622
             title = title.replace("'", "''")
+            _log.debug(f"{title=}")
             vim.command(f"let g:vimania_url_title = '{str(title)}'")
         except requests.exceptions.MissingSchema:
             _log.warning(f"Invalid URL: {url=}")

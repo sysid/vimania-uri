@@ -6,6 +6,7 @@
   this is best automated with a Vader script: `run_tests.sh testfile` in tests directory.
 - vimscript changes can be reloaded as usual
 - `buku.py` needs to be copied from `twbm` package as it is used to push URLs to buku DB.
+- global python version must match Pipfile version for development instllation to work (pythonx)
 
 ## Testing
 - `Vader` tests require libs in `pythonx`.

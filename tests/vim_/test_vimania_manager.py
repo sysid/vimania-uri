@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 
 """
@@ -18,9 +20,9 @@ def mock_vim(mocker):
     return mock_vim
 
 
-@pytest.mark.skip(reason="not applicable currently")
 @pytest.mark.usefixtures("mock_vim")
 class TestVimaniaUriManager:
+    @pytest.mark.skip(reason="not applicable currently")
     def test_twbm(self, mocker, mock_vim):
         import vimania_uri.vim_.vimania_manager as module_under_test
         # noinspection PyUnresolvedReferences
@@ -38,6 +40,7 @@ class TestVimaniaUriManager:
         mocked_add_twbm.assert_called_once()
         mocked_open_uri.open_uri.assert_called_once()
 
+    @pytest.mark.skip(reason="not applicable currently")
     def test_twbm_not_configured(self, mocker, mock_vim):
         import vimania_uri.vim_.vimania_manager as module_under_test
         # noinspection PyUnresolvedReferences
@@ -54,6 +57,21 @@ class TestVimaniaUriManager:
         vm.call_handle_md2(save_twbm="1")
         mocked_open_uri.open_uri.assert_called_once()
         mocked_add_twbm.assert_not_called()
+
+    def test_get_url_title(self, mocker, mock_vim, caplog):
+        caplog.set_level(logging.DEBUG)
+
+        import vimania_uri.vim_.vimania_manager as module_under_test
+        # noinspection PyUnresolvedReferences
+        assert module_under_test.vim == mock_vim
+
+        vm = module_under_test.VimaniaUriManager(
+            extensions=["vimwiki", "markdown", "pdf", "png", "jpg", "jpeg", "gif"],
+            twbm_integrated=False,
+            plugin_root_dir=None,
+        )
+        vm.get_url_title("https://www.google.com")
+        assert "Google" in caplog.text
 
 
 @pytest.mark.parametrize(
