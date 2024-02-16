@@ -124,20 +124,6 @@ endsnippet
 ```
 <br>
 
-## Bookmark Manager Integratiaon
-- If [twbm · PyPI](https://pypi.org/project/twbm/) is installed `vimania-uri` pushes URI's to the bookmark database with `goo`.
-- Pushed bookmarks have default tag `vimania` in the bookmark-manager db.
-- Bookmarks are also removed from bookmark-manager database when removed from markdown file with `dd`
-
-#### Configuration
-For bookmark manager [twbm](https://github.com/sysid/twbm) integration the database location needs to be configured:
-
-    export TWBM_DB_URL="sqlite:///$HOME/twbm/bookmarks.db"
-
-    goo (open and save to bookmark DB)
-    dd (delete URI containing line from markdown and DB)
-
-
 ## Credits
 - inspired by and recommends to use [UltiSnips](https://github.com/SirVer/ultisnips).
 - URI handling is based on work of [mdnav](https://github.com/chmp/mdnav)
