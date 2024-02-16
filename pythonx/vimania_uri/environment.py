@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 _log = logging.getLogger("vimania-plugin.environment")
 ROOT_DIR = Path(__file__).parent.absolute()

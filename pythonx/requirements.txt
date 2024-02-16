@@ -3,3 +3,4 @@ bs4
 lxml
 requests
 pydantic
+pydantic_settings
